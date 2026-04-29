@@ -344,7 +344,6 @@
         .btn-danger { background: var(--danger); }
         .btn-warning { background: var(--warning); }
         .btn-sm { padding: 6px 12px; font-size: 0.75rem; width: auto; }
-        .btn-success { background: var(--success); }
 
         .tabs-container {
             display: flex;
@@ -685,7 +684,7 @@
     // ============================================
     // CONFIGURAÇÕES DO SISTEMA
     // ============================================
-    const API_URL = 'https://script.google.com/macros/s/AKfycbxMPSCOhiyj0-3cDYROQwhfeYGq7mYOh-aFYHPiGe1HiMMhKG6HjFzicqHGzWEQJbgBZg/exec';
+    const API_URL = 'https://script.google.com/macros/s/AKfycbzYEI57ASfV_gdy8DRIpVmJ96D8FyuVR0o-6e2-zKWRzMz_06nZslCxOJf-ULSw9vgB/exec';
     const ADMIN_CPF = "33264502810";
     const SENHA_PADRAO = "270601";
     const STORAGE_KEY = "admin_password";
@@ -1047,7 +1046,7 @@
                     return `<tr>
                         <td><strong>${d.nome}</strong></d>
                         <td>${formatarCPF(d.cpf)}</d>
-                        <td>${d.cartao}</d>
+                        <tr>${d.cartao}</d>
                         <td>${d.totalParcelas}</d>
                         <td>R$ ${d.valorParcela.toFixed(2)}</d>
                         <td>R$ ${totalPago.toFixed(2)}</d>
