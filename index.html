@@ -12,7 +12,6 @@
             padding: 0;
             box-sizing: border-box;
             font-family: system-ui, 'Segoe UI', 'Inter', 'Helvetica Neue', sans-serif;
-            transition: background 0.3s ease, color 0.2s ease, border-color 0.2s;
         }
 
         :root {
@@ -27,7 +26,7 @@
             --danger: #ef4444;
             --warning: #f59e0b;
             --purple: #8b5cf6;
-            --shadow: 0 10px 25px -5px rgba(0,0,0,0.05), 0 8px 10px -6px rgba(0,0,0,0.02);
+            --shadow: 0 10px 25px -5px rgba(0,0,0,0.05);
         }
 
         body.dark {
@@ -36,7 +35,6 @@
             --text: #f1f5f9;
             --text-light: #94a3b8;
             --border: #334155;
-            --shadow: 0 10px 25px -5px rgba(0,0,0,0.3);
         }
 
         body {
@@ -191,7 +189,6 @@
             font-weight: bold;
             padding: 2px 12px;
             border-radius: 20px;
-            pointer-events: none;
         }
 
         .filter-group {
@@ -260,18 +257,12 @@
             font-size: 0.9rem;
             cursor: pointer;
             color: var(--text);
-            transition: all 0.2s;
         }
 
         .action-btn.active {
             background: var(--primary);
             color: white;
             border-color: var(--primary);
-        }
-
-        .action-btn:hover {
-            background: var(--primary);
-            color: white;
         }
 
         .form-panel {
@@ -307,13 +298,6 @@
             color: var(--text-light);
         }
 
-        .label-opcional {
-            font-size: 0.65rem;
-            color: var(--warning);
-            font-weight: normal;
-            margin-left: 5px;
-        }
-
         input, select, button {
             width: 100%;
             padding: 10px 14px;
@@ -330,10 +314,6 @@
             border: none;
             font-weight: 600;
             cursor: pointer;
-        }
-
-        button:hover {
-            background: var(--primary-dark);
         }
 
         button:disabled {
@@ -361,18 +341,11 @@
             font-size: 0.85rem;
             cursor: pointer;
             color: var(--text);
-            transition: all 0.2s;
-        }
-
-        .filter-tab:hover {
-            background: var(--primary);
-            color: white;
         }
 
         .filter-tab.active {
             background: var(--primary);
             color: white;
-            border-color: var(--primary);
         }
 
         .chart-container {
@@ -399,7 +372,6 @@
             flex-wrap: wrap;
             margin-bottom: 10px;
             font-weight: 700;
-            font-size: 1rem;
         }
 
         .badge {
@@ -499,14 +471,14 @@
             margin-top: 10px;
         }
 
-        /* LOADING OVERLAY */
+        /* LOADING RÁPIDO */
         .loading-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.7);
+            background: rgba(0, 0, 0, 0.8);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -516,12 +488,12 @@
         }
 
         .loading-spinner {
-            width: 60px;
-            height: 60px;
-            border: 5px solid var(--border);
+            width: 50px;
+            height: 50px;
+            border: 4px solid var(--border);
             border-top-color: var(--primary);
             border-radius: 50%;
-            animation: spin 1s linear infinite;
+            animation: spin 0.8s linear infinite;
         }
 
         @keyframes spin {
@@ -530,10 +502,9 @@
 
         .loading-text {
             color: white;
-            font-size: 1.2rem;
-            font-weight: 500;
-            background: rgba(0,0,0,0.5);
-            padding: 10px 20px;
+            font-size: 1rem;
+            background: rgba(0,0,0,0.7);
+            padding: 8px 16px;
             border-radius: 40px;
         }
 
@@ -615,14 +586,14 @@
             <div class="form-row">
                 <div class="form-group"><label>Nome completo *</label><input type="text" id="newName" placeholder="Ex: Ana Silva"></div>
                 <div class="form-group"><label>CPF *</label><input type="text" id="newCPF" placeholder="Apenas números" maxlength="11"></div>
-                <div class="form-group"><label>WhatsApp <span class="label-opcional">(opcional)</span></label><input type="text" id="newWhats" placeholder="11999999999"></div>
-                <div class="form-group"><label>Valor da parcela (R$) *</label><input type="number" id="newInstallment" placeholder="275"></div>
-                <div class="form-group"><label>Total de parcelas *</label><input type="number" id="newTotal" placeholder="10"></div>
+                <div class="form-group"><label>WhatsApp</label><input type="text" id="newWhats" placeholder="11999999999"></div>
+                <div class="form-group"><label>Valor (R$) *</label><input type="number" id="newInstallment" placeholder="275"></div>
+                <div class="form-group"><label>Total parcelas *</label><input type="number" id="newTotal" placeholder="10"></div>
             </div>
             <div class="form-row">
-                <div class="form-group"><label>Parcelas já pagas</label><input type="number" id="newPaid" placeholder="0" value="0"></div>
-                <div class="form-group"><label>Cartão</label><select id="newCard"><option value="A">Cartão A (vence dia 10)</option><option value="B">Cartão B (vence dia 25)</option></select></div>
-                <div class="form-group"><label>Data início <span class="label-opcional">(opcional)</span></label><input type="date" id="newDate"></div>
+                <div class="form-group"><label>Parcelas pagas</label><input type="number" id="newPaid" placeholder="0" value="0"></div>
+                <div class="form-group"><label>Cartão</label><select id="newCard"><option value="A">Cartão A</option><option value="B">Cartão B</option></select></div>
+                <div class="form-group"><label>Data início</label><input type="date" id="newDate"></div>
             </div>
             <button id="createLoanBtn">✅ Criar dívida</button>
         </div>
@@ -630,24 +601,24 @@
         <div id="form-pay" class="form-panel">
             <h3>💰 Pagar parcela</h3>
             <div class="form-row">
-                <div class="form-group"><label>Selecione a dívida</label><select id="payLoanSelect"></select></div>
-                <div class="form-group"><label>Data do pagamento</label><input type="date" id="payDate"></div>
+                <div class="form-group"><label>Dívida</label><select id="payLoanSelect"></select></div>
+                <div class="form-group"><label>Data pagamento</label><input type="date" id="payDate"></div>
             </div>
             <div class="form-row">
-                <div class="form-group"><label>🔐 Senha</label><input type="password" id="paySenha" placeholder="Senha administrativa"></div>
+                <div class="form-group"><label>🔐 Senha</label><input type="password" id="paySenha"></div>
             </div>
-            <button id="payInstallmentBtn">✅ Confirmar pagamento</button>
+            <button id="payInstallmentBtn">✅ Confirmar</button>
         </div>
 
         <div id="form-edit" class="form-panel">
-            <h3>✏️ Editar/Excluir dívida</h3>
+            <h3>✏️ Editar/Excluir</h3>
             <div class="form-row">
                 <div class="form-group"><label>Dívida</label><select id="editLoanSelect"></select></div>
-                <div class="form-group"><label>Valor parcela (R$)</label><input type="number" id="editInstallmentValue"></div>
+                <div class="form-group"><label>Valor (R$)</label><input type="number" id="editInstallmentValue"></div>
                 <div class="form-group"><label>Total parcelas</label><input type="number" id="editTotalParcels"></div>
             </div>
             <div class="form-row">
-                <div class="form-group"><label>🔐 Senha</label><input type="password" id="editSenha" placeholder="Senha administrativa"></div>
+                <div class="form-group"><label>🔐 Senha</label><input type="password" id="editSenha"></div>
             </div>
             <div class="form-row">
                 <button id="saveEditBtn">💾 Salvar</button>
@@ -656,10 +627,10 @@
         </div>
 
         <div id="form-backup" class="form-panel">
-            <h3>💾 Backup / Exportar</h3>
+            <h3>💾 Backup</h3>
             <div class="form-row">
-                <button id="exportExcelBtn">📊 Baixar Excel</button>
-                <button id="backupBtn">📁 Backup (JSON)</button>
+                <button id="exportExcelBtn">📊 Excel</button>
+                <button id="backupBtn">📁 Backup</button>
                 <button id="restoreBtn">🔄 Restaurar</button>
                 <input type="file" id="restoreFile" accept=".json" style="display:none">
             </div>
@@ -668,7 +639,7 @@
         <div class="tabs-container">
             <button class="filter-tab active" data-filtro="A">💳 Cartão A</button>
             <button class="filter-tab" data-filtro="B">💳 Cartão B</button>
-            <button class="filter-tab" data-filtro="all">📋 Todos os cartões</button>
+            <button class="filter-tab" data-filtro="all">📋 Todos</button>
             <button class="filter-tab" data-filtro="quitadas">✅ Quitadas</button>
             <button class="filter-tab" data-filtro="graficos">📈 Gráficos</button>
         </div>
@@ -684,24 +655,22 @@
                 <h2>📋 Dívidas ativas</h2>
                 <div id="activeLoansList"></div>
             </div>
-
             <div id="divQuitadasLista" style="display: none;">
-                <h2>✅ Histórico de dívidas quitadas</h2>
+                <h2>✅ Quitadas</h2>
                 <div class="table-container">
                     <table class="data-table">
-                        <thead><tr><th>Nome</th><th>CPF</th><th>Cartão</th><th>Total Parcelas</th><th>Valor</th><th>Total Pago</th><th>Data Quitação</th><th>WhatsApp</th></table></thead>
+                        <thead><tr><th>Nome</th><th>CPF</th><th>Cartão</th><th>Total</th><th>Valor</th><th>Total Pago</th><th>Quitação</th><th>WhatsApp</th></td></thead>
                         <tbody id="quitadasTableBody"></tbody>
-                    }</table>
+                    </table>
                 </div>
             </div>
-
             <div id="divTabelaGeral">
-                <h2>📊 Tabela de dívidas ativas</h2>
+                <h2>📊 Tabela geral</h2>
                 <div class="table-container">
                     <table class="data-table">
-                        <thead><tr><th>Nome</th><th>CPF</th><th>Cartão</th><th>Parcela</th><th>Valor</th><th>Restantes</th><th>Total Pendente</th><th>Vencimento</th><th>WhatsApp</th></tr></thead>
+                        <thead><tr><th>Nome</th><th>CPF</th><th>Cartão</th><th>Parcela</th><th>Valor</th><th>Restam</th><th>Total pendente</th><th>Vencimento</th><th>WhatsApp</th></tr></thead>
                         <tbody id="tableBody"></tbody>
-                    }</table>
+                    </table>
                 </div>
             </div>
         </div>
@@ -710,53 +679,24 @@
 
 <div id="modalWhats" class="modal hidden">
     <div class="modal-content">
-        <h3>📲 Enviar cobrança via WhatsApp</h3>
-        <input type="text" id="whatsNumero" placeholder="Número com DDD">
+        <h3>📲 WhatsApp</h3>
+        <input type="text" id="whatsNumero" placeholder="Número">
         <textarea id="whatsMensagem" rows="4" placeholder="Mensagem..."></textarea>
         <button id="btnEnviarWhats" style="background:#25D366;">📲 Enviar</button>
-        <button id="btnFecharWhats" style="background:var(--text-light);">Cancelar</button>
+        <button id="btnFecharWhats">Cancelar</button>
     </div>
 </div>
 
-<!-- LOADING OVERLAY -->
 <div id="loadingOverlay" class="loading-overlay hidden">
     <div class="loading-spinner"></div>
-    <div class="loading-text" id="loadingText">⏳ Processando...</div>
+    <div class="loading-text">⏳ Processando...</div>
 </div>
 
 <script>
-    // ============================================
-    // CONFIGURAÇÕES DO SISTEMA
-    // ============================================
     const API_URL = 'https://script.google.com/macros/s/AKfycbzYEI57ASfV_gdy8DRIpVmJ96D8FyuVR0o-6e2-zKWRzMz_06nZslCxOJf-ULSw9vgB/exec';
     const ADMIN_CPF = "12345678909";
     const SENHA_PADRAO = "123456";
     const STORAGE_KEY = "admin_password";
-    
-    // Funções de Loading
-    function showLoading(message = "⏳ Processando...") {
-        const overlay = document.getElementById('loadingOverlay');
-        const text = document.getElementById('loadingText');
-        text.textContent = message;
-        overlay.classList.remove('hidden');
-    }
-    
-    function hideLoading() {
-        const overlay = document.getElementById('loadingOverlay');
-        overlay.classList.add('hidden');
-    }
-    
-    function getAdminSenha() {
-        const savedPassword = localStorage.getItem(STORAGE_KEY);
-        if (savedPassword) return savedPassword;
-        return SENHA_PADRAO;
-    }
-    
-    function setAdminSenha(novaSenha) {
-        localStorage.setItem(STORAGE_KEY, novaSenha);
-    }
-    
-    const CARD_DUE = { A: 10, B: 25 };
     
     let dividas = [];
     let nextId = 1;
@@ -767,23 +707,37 @@
     let abaFiltroAtual = "A";
     let chartInstance = null;
 
+    function showLoading(msg = "⏳ Processando...") {
+        const overlay = document.getElementById('loadingOverlay');
+        document.getElementById('loadingText').textContent = msg;
+        overlay.classList.remove('hidden');
+    }
+
+    function hideLoading() {
+        document.getElementById('loadingOverlay').classList.add('hidden');
+    }
+
+    function getAdminSenha() {
+        return localStorage.getItem(STORAGE_KEY) || SENHA_PADRAO;
+    }
+
+    function setAdminSenha(nova) {
+        localStorage.setItem(STORAGE_KEY, nova);
+    }
+
     function validarCPF(cpf) {
         cpf = cpf.replace(/[^\d]/g, '');
         if (cpf.length !== 11) return false;
         if (/^(\d)\1{10}$/.test(cpf)) return false;
         
         let soma = 0;
-        for (let i = 0; i < 9; i++) {
-            soma += parseInt(cpf.charAt(i)) * (10 - i);
-        }
+        for (let i = 0; i < 9; i++) soma += parseInt(cpf.charAt(i)) * (10 - i);
         let resto = 11 - (soma % 11);
         let digito1 = (resto === 10 || resto === 11) ? 0 : resto;
         if (digito1 !== parseInt(cpf.charAt(9))) return false;
         
         soma = 0;
-        for (let i = 0; i < 10; i++) {
-            soma += parseInt(cpf.charAt(i)) * (11 - i);
-        }
+        for (let i = 0; i < 10; i++) soma += parseInt(cpf.charAt(i)) * (11 - i);
         resto = 11 - (soma % 11);
         let digito2 = (resto === 10 || resto === 11) ? 0 : resto;
         return digito2 === parseInt(cpf.charAt(10));
@@ -808,7 +762,7 @@
 
     function calcularDataInicioAuto(pagas, cartao) {
         let dataAtual = new Date();
-        let diaVencimento = CARD_DUE[cartao];
+        let diaVencimento = cartao === 'A' ? 10 : 25;
         let ano = dataAtual.getFullYear();
         let mes = dataAtual.getMonth();
         let diaAtual = dataAtual.getDate();
@@ -829,7 +783,7 @@
         if(!inicio) return null;
         let dataInicio = inicio.split('T')[0];
         let [ano, mes, dia] = dataInicio.split('-').map(Number);
-        let diaVenc = CARD_DUE[cartao];
+        let diaVenc = cartao === 'A' ? 10 : 25;
         let mesVenc = mes + (parcelaAtual - 1);
         let anoVenc = ano;
         while(mesVenc > 12) { mesVenc -= 12; anoVenc++; }
@@ -840,7 +794,6 @@
 
     async function carregarDadosCloud() {
         try {
-            showLoading("📥 Carregando dados da planilha...");
             const response = await fetch(`${API_URL}?action=load`);
             const result = await response.json();
             
@@ -858,37 +811,22 @@
                     pagamentos: row[9] ? JSON.parse(row[9]) : []
                 }));
                 nextId = dividas.length > 0 ? Math.max(...dividas.map(d => d.id)) + 1 : 1;
-                console.log("✅ Dados carregados:", dividas.length);
-                hideLoading();
                 return true;
             }
-            hideLoading();
             return false;
         } catch(e) {
-            console.error("Erro ao carregar:", e);
-            hideLoading();
+            console.error(e);
             return false;
         }
     }
 
     async function salvarDadosCloud() {
         try {
-            showLoading("💾 Salvando dados na planilha...");
             const response = await fetch(`${API_URL}?action=save&dados=${encodeURIComponent(JSON.stringify(dividas))}`);
             const result = await response.json();
-            
-            if(result.success) {
-                console.log("✅ Dados salvos com sucesso");
-                hideLoading();
-                return true;
-            } else {
-                console.error("Erro ao salvar:", result.error);
-                hideLoading();
-                return false;
-            }
+            return result.success;
         } catch(e) {
-            console.error("Erro de conexão:", e);
-            hideLoading();
+            console.error(e);
             return false;
         }
     }
@@ -915,14 +853,13 @@
         }
         let nomeFiltro = document.getElementById('filtroNome')?.value.toLowerCase().trim();
         if(nomeFiltro) quitadas = quitadas.filter(d => d.nome.toLowerCase().includes(nomeFiltro));
-        if(abaFiltroAtual === 'A' || abaFiltroAtual === 'B') quitadas = quitadas.filter(d => d.cartao === abaFiltroAtual);
         return quitadas;
     }
 
     function getPaymentsInMonth(month) {
         let total = 0;
-        let dividasFiltradas = isAdmin ? dividas : dividas.filter(d => d.nome.toLowerCase().trim() === currentUser?.toLowerCase().trim() && d.cpf === currentCPF);
-        dividasFiltradas.forEach(d => {
+        let filtradas = isAdmin ? dividas : dividas.filter(d => d.nome.toLowerCase().trim() === currentUser?.toLowerCase().trim() && d.cpf === currentCPF);
+        filtradas.forEach(d => {
             d.pagamentos?.forEach(p => { if(p.data.startsWith(month)) total += d.valorParcela; });
         });
         return total;
@@ -930,8 +867,8 @@
 
     function getDueInMonth(month) {
         let total = 0;
-        let dividasFiltradas = isAdmin ? dividas : dividas.filter(d => d.nome.toLowerCase().trim() === currentUser?.toLowerCase().trim() && d.cpf === currentCPF);
-        dividasFiltradas.forEach(d => {
+        let filtradas = isAdmin ? dividas : dividas.filter(d => d.nome.toLowerCase().trim() === currentUser?.toLowerCase().trim() && d.cpf === currentCPF);
+        filtradas.forEach(d => {
             if(d.parcelaAtual > d.totalParcelas) return;
             for(let i = d.parcelaAtual; i <= d.totalParcelas; i++) {
                 let venc = calcularVencimento(d.inicio, i, d.cartao);
@@ -947,18 +884,15 @@
 
     function getDadosGrafico() {
         let hoje = new Date();
-        let meses = [];
-        let pagos = [];
-        let aPagar = [];
-        let dividasFiltradas = isAdmin ? dividas : dividas.filter(d => d.nome.toLowerCase().trim() === currentUser?.toLowerCase().trim() && d.cpf === currentCPF);
+        let meses = [], pagos = [], aPagar = [];
+        let filtradas = isAdmin ? dividas : dividas.filter(d => d.nome.toLowerCase().trim() === currentUser?.toLowerCase().trim() && d.cpf === currentCPF);
         
         for(let i = 5; i >= 0; i--) {
             let data = new Date(hoje.getFullYear(), hoje.getMonth() - i, 1);
             let mesStr = `${data.getFullYear()}-${String(data.getMonth()+1).padStart(2,'0')}`;
             meses.push(mesStr);
-            let totalPago = 0;
-            let totalDevido = 0;
-            dividasFiltradas.forEach(d => {
+            let totalPago = 0, totalDevido = 0;
+            filtradas.forEach(d => {
                 d.pagamentos?.forEach(p => { if(p.data.startsWith(mesStr)) totalPago += d.valorParcela; });
                 if(d.parcelaAtual <= d.totalParcelas) {
                     for(let j = d.parcelaAtual; j <= d.totalParcelas; j++) {
@@ -987,20 +921,14 @@
             data: {
                 labels: meses,
                 datasets: [
-                    { label: '💰 Pagamentos realizados', data: pagos, borderColor: '#10b981', backgroundColor: 'rgba(16,185,129,0.1)', tension: 0.3, fill: true, pointRadius: 3 },
-                    { label: '📅 Valores a vencer', data: aPagar, borderColor: '#f59e0b', backgroundColor: 'rgba(245,158,11,0.1)', tension: 0.3, fill: true, pointRadius: 3 }
+                    { label: '💰 Pagamentos', data: pagos, borderColor: '#10b981', tension: 0.3, fill: true },
+                    { label: '📅 A vencer', data: aPagar, borderColor: '#f59e0b', tension: 0.3, fill: true }
                 ]
             },
             options: {
                 responsive: true,
-                maintainAspectRatio: true,
                 plugins: {
-                    tooltip: { callbacks: { label: (ctx) => `${ctx.dataset.label}: R$ ${ctx.raw.toLocaleString('pt-BR', {minimumFractionDigits:2})}` } },
-                    legend: { position: 'top' }
-                },
-                scales: { 
-                    y: { ticks: { callback: (val) => `R$ ${val.toLocaleString('pt-BR')}` }, grid: { display: false } },
-                    x: { grid: { display: false } }
+                    tooltip: { callbacks: { label: (ctx) => `R$ ${ctx.raw.toLocaleString('pt-BR')}` } }
                 }
             }
         });
@@ -1008,32 +936,32 @@
 
     function alternarVisao() {
         const graficosDiv = document.getElementById('graficosContainer');
-        const divActiveLoans = document.getElementById('divActiveLoans');
-        const divQuitadasLista = document.getElementById('divQuitadasLista');
-        const divTabelaGeral = document.getElementById('divTabelaGeral');
+        const divActive = document.getElementById('divActiveLoans');
+        const divQuitadas = document.getElementById('divQuitadasLista');
+        const divTabela = document.getElementById('divTabelaGeral');
         
         if(abaFiltroAtual === 'graficos') {
             graficosDiv.style.display = 'block';
-            divActiveLoans.style.display = 'none';
-            divQuitadasLista.style.display = 'none';
-            divTabelaGeral.style.display = 'none';
+            divActive.style.display = 'none';
+            divQuitadas.style.display = 'none';
+            divTabela.style.display = 'none';
             setTimeout(() => atualizarGrafico(), 100);
             return;
         }
         graficosDiv.style.display = 'none';
         
         if(abaFiltroAtual === 'quitadas') {
-            divActiveLoans.style.display = 'none';
-            divQuitadasLista.style.display = 'block';
-            divTabelaGeral.style.display = 'none';
+            divActive.style.display = 'none';
+            divQuitadas.style.display = 'block';
+            divTabela.style.display = 'none';
         } else if(abaFiltroAtual === 'all') {
-            divActiveLoans.style.display = 'none';
-            divQuitadasLista.style.display = 'none';
-            divTabelaGeral.style.display = 'block';
+            divActive.style.display = 'none';
+            divQuitadas.style.display = 'none';
+            divTabela.style.display = 'block';
         } else {
-            divActiveLoans.style.display = 'block';
-            divQuitadasLista.style.display = 'none';
-            divTabelaGeral.style.display = 'block';
+            divActive.style.display = 'block';
+            divQuitadas.style.display = 'none';
+            divTabela.style.display = 'block';
         }
     }
 
@@ -1053,14 +981,14 @@
                 <div class="stat-card"><h3>💰 Dívida total</h3><div class="value">R$ ${totalDivida.toLocaleString('pt-BR', {minimumFractionDigits:2})}</div></div>
                 <div class="stat-card"><h3>📆 A pagar em ${mesRef}</h3><div class="value">R$ ${aPagarMes.toLocaleString('pt-BR', {minimumFractionDigits:2})}</div></div>
                 <div class="stat-card"><h3>✅ Pago em ${mesRef}</h3><div class="value">R$ ${pagoMes.toLocaleString('pt-BR', {minimumFractionDigits:2})}</div></div>
-                <div class="stat-card"><h3>📦 Dívidas ativas</h3><div class="value">${todosAtivos.length}</div></div>
+                <div class="stat-card"><h3>📦 Ativas</h3><div class="value">${todosAtivos.length}</div></div>
             `;
         }
         
         let activeDiv = document.getElementById('activeLoansList');
         if(activeDiv) {
             if(ativos.length === 0) {
-                activeDiv.innerHTML = '<p>✨ Nenhuma dívida ativa cadastrada.</p>';
+                activeDiv.innerHTML = '<p>✨ Nenhuma dívida ativa.</p>';
             } else {
                 activeDiv.innerHTML = ativos.map(d => {
                     let faltam = d.totalParcelas - d.parcelaAtual + 1;
@@ -1069,13 +997,12 @@
                     let percent = ((d.parcelaAtual-1)/d.totalParcelas)*100;
                     return `
                         <div class="divida-card">
-                            <div class="divida-header"><span>${d.nome} (Cartão ${d.cartao})</span><span class="badge">${d.parcelaAtual}/${d.totalParcelas}</span></div>
-                            <div>💰 R$ ${d.valorParcela.toFixed(2)} / parcela</div>
-                            <div>📅 Início: ${formatarDataBR(d.inicio)} | 🔜 Vencimento: ${vencimento}</div>
+                            <div class="divida-header"><span>${d.nome} (${d.cartao})</span><span class="badge">${d.parcelaAtual}/${d.totalParcelas}</span></div>
+                            <div>💰 R$ ${d.valorParcela.toFixed(2)}</div>
+                            <div>📅 Início: ${formatarDataBR(d.inicio)} | Venc: ${vencimento}</div>
                             <div class="progress-bar"><div class="progress-fill" style="width:${percent}%"></div></div>
                             <div><strong>Faltam: ${faltam}x R$ ${d.valorParcela.toFixed(2)} = R$ ${pendente.toFixed(2)}</strong></div>
-                            <div>📞 WhatsApp: ${d.whats || 'não cadastrado'}</div>
-                            <div style="margin-top:10px;"><button class="btn-sm" onclick="abrirWhats(${d.id})">📲 Cobrar WhatsApp</button></div>
+                            <button class="btn-sm" onclick="abrirWhats(${d.id})">📲 Cobrar</button>
                         </div>
                     `;
                 }).join('');
@@ -1085,14 +1012,14 @@
         let tableBody = document.getElementById('tableBody');
         if(tableBody) {
             if(ativos.length === 0) {
-                tableBody.innerHTML = '<tr><td colspan="9" style="text-align:center;">✨ Nenhuma dívida ativa cadastrada.离子</td>';
+                tableBody.innerHTML = '<tr><td colspan="9">✨ Nenhuma dívida ativa.</d></tr>';
             } else {
                 tableBody.innerHTML = ativos.map(d => {
                     let faltam = d.totalParcelas - d.parcelaAtual + 1;
                     let pendente = faltam * d.valorParcela;
                     let vencimento = calcularVencimento(d.inicio, d.parcelaAtual, d.cartao) || '—';
                     return `<tr>
-                        <td><strong>${d.nome}</strong></d>
+                        <td>${d.nome}</d>
                         <td>${formatarCPF(d.cpf)}</d>
                         <td>${d.cartao}</d>
                         <td>${d.parcelaAtual}/${d.totalParcelas}</d>
@@ -1100,7 +1027,7 @@
                         <td>${faltam}</d>
                         <td>R$ ${pendente.toFixed(2)}</d>
                         <td>${vencimento}</d>
-                        <td><button class="btn-sm" onclick="abrirWhats(${d.id})" style="background:#25D366;">📲</button>
+                        <td><button class="btn-sm" onclick="abrirWhats(${d.id})">📲</button>
                     </tr>`;
                 }).join('');
             }
@@ -1110,40 +1037,37 @@
         let quitadasBody = document.getElementById('quitadasTableBody');
         if(quitadasBody) {
             if(quitadas.length === 0) {
-                quitadasBody.innerHTML = '<tr><td colspan="8" style="text-align:center;">✨ Nenhuma dívida quitada.}</d></tr>';
+                quitadasBody.innerHTML = '<tr><td colspan="8">✨ Nenhuma quitada.</d></tr>';
             } else {
                 quitadasBody.innerHTML = quitadas.map(d => {
                     let totalPago = d.totalParcelas * d.valorParcela;
-                    let dataQuitacao = d.pagamentos && d.pagamentos.length > 0 ? 
-                        formatarDataBR(d.pagamentos[d.pagamentos.length-1].data) : formatarDataBR(d.inicio);
+                    let dataQuitacao = d.pagamentos?.length ? formatarDataBR(d.pagamentos[d.pagamentos.length-1].data) : formatarDataBR(d.inicio);
                     return `<tr>
-                        <td><strong>${d.nome}</strong></d>
+                        <td>${d.nome}</d>
                         <td>${formatarCPF(d.cpf)}</d>
                         <td>${d.cartao}</d>
                         <td>${d.totalParcelas}</d>
                         <td>R$ ${d.valorParcela.toFixed(2)}</d>
                         <td>R$ ${totalPago.toFixed(2)}</d>
                         <td>${dataQuitacao}</d>
-                        <td>${d.whats || 'não cadastrado'}</d>
+                        <td>${d.whats || '-'}</d>
                     </tr>`;
                 }).join('');
             }
         }
         
         if(isAdmin) {
-            let todosAtivosSelect = dividas.filter(d => d.parcelaAtual <= d.totalParcelas);
+            let ativosSelect = dividas.filter(d => d.parcelaAtual <= d.totalParcelas);
             let paySelect = document.getElementById('payLoanSelect');
-            if(paySelect) paySelect.innerHTML = todosAtivosSelect.map(d => `<option value="${d.id}">${d.nome} (${d.cartao}) - ${d.parcelaAtual}/${d.totalParcelas}</option>`).join('');
+            if(paySelect) paySelect.innerHTML = ativosSelect.map(d => `<option value="${d.id}">${d.nome} - ${d.parcelaAtual}/${d.totalParcelas}</option>`).join('');
             
             let editSelect = document.getElementById('editLoanSelect');
             if(editSelect) {
-                editSelect.innerHTML = dividas.map(d => `<option value="${d.id}">${d.nome} (${d.cartao}) - ${d.parcelaAtual}/${d.totalParcelas}${d.parcelaAtual > d.totalParcelas ? ' [QUITADA]' : ''}</option>`).join('');
+                editSelect.innerHTML = dividas.map(d => `<option value="${d.id}">${d.nome} - ${d.parcelaAtual}/${d.totalParcelas}</option>`).join('');
                 let selected = dividas.find(d => d.id == editSelect.value);
                 if(selected) {
-                    let editValor = document.getElementById('editInstallmentValue');
-                    let editTotal = document.getElementById('editTotalParcels');
-                    if(editValor) editValor.value = selected.valorParcela;
-                    if(editTotal) editTotal.value = selected.totalParcelas;
+                    document.getElementById('editInstallmentValue').value = selected.valorParcela;
+                    document.getElementById('editTotalParcels').value = selected.totalParcelas;
                 }
             }
         }
@@ -1169,26 +1093,23 @@
     }
 
     window.abrirWhats = function(id) {
-        let divida = dividas.find(d => d.id === id);
-        if(!divida) return;
-        let faltam = divida.totalParcelas - divida.parcelaAtual + 1;
-        let totalPendente = faltam * divida.valorParcela;
-        let vencimento = calcularVencimento(divida.inicio, divida.parcelaAtual, divida.cartao) || 'em breve';
-        let msg = `Olá ${divida.nome}! 🏦\n\nSituação da sua dívida no cartão ${divida.cartao}:\n📌 Parcela: ${divida.parcelaAtual}/${divida.totalParcelas}\n💰 Valor: R$ ${divida.valorParcela.toFixed(2)}\n📅 Próximo vencimento: ${vencimento}\n💵 Total pendente: R$ ${totalPendente.toFixed(2)}\n\nQualquer dúvida, entre em contato!`;
-        document.getElementById('whatsNumero').value = divida.whats || '';
+        let d = dividas.find(d => d.id === id);
+        if(!d) return;
+        let faltam = d.totalParcelas - d.parcelaAtual + 1;
+        let totalPendente = faltam * d.valorParcela;
+        let venc = calcularVencimento(d.inicio, d.parcelaAtual, d.cartao) || 'em breve';
+        let msg = `Olá ${d.nome}! 📋\nSituação: ${d.parcelaAtual}/${d.totalParcelas}\nValor: R$ ${d.valorParcela.toFixed(2)}\nVencimento: ${venc}\nTotal pendente: R$ ${totalPendente.toFixed(2)}`;
+        document.getElementById('whatsNumero').value = d.whats || '';
         document.getElementById('whatsMensagem').value = msg;
         document.getElementById('modalWhats').classList.remove('hidden');
     };
     
-    // ============================================
-    // EVENTOS DO SISTEMA
-    // ============================================
-    
+    // EVENTOS
     document.getElementById('btnEnviarWhats')?.addEventListener('click', () => {
         let numero = document.getElementById('whatsNumero').value.replace(/\D/g, '');
-        let mensagem = encodeURIComponent(document.getElementById('whatsMensagem').value);
-        if(numero) window.open(`https://wa.me/55${numero}?text=${mensagem}`, '_blank');
-        else alert("Informe o número");
+        let msg = encodeURIComponent(document.getElementById('whatsMensagem').value);
+        if(numero) window.open(`https://wa.me/55${numero}?text=${msg}`, '_blank');
+        else alert("Número inválido");
         document.getElementById('modalWhats').classList.add('hidden');
     });
     
@@ -1199,7 +1120,6 @@
     document.getElementById('loginCPF')?.addEventListener('input', function(e) {
         let cpf = this.value;
         let msgDiv = document.getElementById('cpfValidationMsg');
-        
         if (cpf.length === 11) {
             if (validarCPF(cpf)) {
                 msgDiv.textContent = '✓ CPF válido';
@@ -1209,7 +1129,7 @@
                 msgDiv.className = 'cpf-invalid';
             }
         } else if (cpf.length > 0) {
-            msgDiv.textContent = `CPF precisa ter 11 dígitos (faltam ${11 - cpf.length})`;
+            msgDiv.textContent = `Faltam ${11 - cpf.length} dígitos`;
             msgDiv.className = 'cpf-invalid';
         } else {
             msgDiv.classList.add('hidden');
@@ -1219,22 +1139,16 @@
     document.getElementById('resetCPF')?.addEventListener('input', function(e) {
         let cpf = this.value;
         let msgDiv = document.getElementById('resetCpfValidationMsg');
-        
         if (cpf.length === 11) {
-            if (validarCPF(cpf)) {
-                if (cpf === ADMIN_CPF) {
-                    msgDiv.textContent = '✓ CPF do administrador validado';
-                    msgDiv.className = 'cpf-valid';
-                } else {
-                    msgDiv.textContent = '✗ Este CPF não é do administrador';
-                    msgDiv.className = 'cpf-invalid';
-                }
+            if (validarCPF(cpf) && cpf === ADMIN_CPF) {
+                msgDiv.textContent = '✓ CPF do administrador';
+                msgDiv.className = 'cpf-valid';
             } else {
-                msgDiv.textContent = '✗ CPF inválido';
+                msgDiv.textContent = '✗ CPF inválido ou não é admin';
                 msgDiv.className = 'cpf-invalid';
             }
         } else if (cpf.length > 0) {
-            msgDiv.textContent = `CPF precisa ter 11 dígitos (faltam ${11 - cpf.length})`;
+            msgDiv.textContent = `Faltam ${11 - cpf.length} dígitos`;
             msgDiv.className = 'cpf-invalid';
         } else {
             msgDiv.classList.add('hidden');
@@ -1244,10 +1158,6 @@
     document.getElementById('btnResetPassword')?.addEventListener('click', () => {
         document.getElementById('loginScreen').classList.add('hidden');
         document.getElementById('resetPasswordScreen').classList.remove('hidden');
-        document.getElementById('resetCPF').value = '';
-        document.getElementById('resetNewPassword').value = '';
-        document.getElementById('resetConfirmPassword').value = '';
-        document.getElementById('resetError').classList.add('hidden');
     });
     
     document.getElementById('btnBackToLogin')?.addEventListener('click', () => {
@@ -1255,64 +1165,37 @@
         document.getElementById('loginScreen').classList.remove('hidden');
     });
     
-    document.getElementById('btnConfirmReset')?.addEventListener('click', async () => {
+    document.getElementById('btnConfirmReset')?.addEventListener('click', () => {
         let cpf = document.getElementById('resetCPF').value.trim();
-        let novaSenha = document.getElementById('resetNewPassword').value;
-        let confirmSenha = document.getElementById('resetConfirmPassword').value;
+        let nova = document.getElementById('resetNewPassword').value;
+        let confirma = document.getElementById('resetConfirmPassword').value;
         let errorDiv = document.getElementById('resetError');
         
-        if (!cpf) {
-            errorDiv.textContent = 'Digite o CPF do administrador';
+        if (!cpf || cpf !== ADMIN_CPF) {
+            errorDiv.textContent = 'CPF do administrador inválido!';
+            errorDiv.classList.remove('hidden');
+            return;
+        }
+        if (!nova || nova.length < 4) {
+            errorDiv.textContent = 'Senha deve ter pelo menos 4 caracteres';
+            errorDiv.classList.remove('hidden');
+            return;
+        }
+        if (nova !== confirma) {
+            errorDiv.textContent = 'Senhas não coincidem!';
             errorDiv.classList.remove('hidden');
             return;
         }
         
-        if (!validarCPF(cpf)) {
-            errorDiv.textContent = 'CPF inválido!';
-            errorDiv.classList.remove('hidden');
-            return;
-        }
-        
-        if (cpf !== ADMIN_CPF) {
-            errorDiv.textContent = 'Este CPF não é do administrador!';
-            errorDiv.classList.remove('hidden');
-            return;
-        }
-        
-        if (!novaSenha) {
-            errorDiv.textContent = 'Digite uma nova senha';
-            errorDiv.classList.remove('hidden');
-            return;
-        }
-        
-        if (novaSenha.length < 4) {
-            errorDiv.textContent = 'A senha deve ter pelo menos 4 caracteres';
-            errorDiv.classList.remove('hidden');
-            return;
-        }
-        
-        if (novaSenha !== confirmSenha) {
-            errorDiv.textContent = 'As senhas não coincidem!';
-            errorDiv.classList.remove('hidden');
-            return;
-        }
-        
-        setAdminSenha(novaSenha);
-        alert(`✅ Senha redefinida com sucesso!\n\nNova senha: ${novaSenha}\n\nGuarde em um local seguro!`);
-        
+        setAdminSenha(nova);
+        alert(`✅ Senha alterada para: ${nova}`);
         document.getElementById('resetPasswordScreen').classList.add('hidden');
         document.getElementById('loginScreen').classList.remove('hidden');
-        document.getElementById('resetCPF').value = '';
-        document.getElementById('resetNewPassword').value = '';
-        document.getElementById('resetConfirmPassword').value = '';
         errorDiv.classList.add('hidden');
     });
     
     document.getElementById('createLoanBtn')?.addEventListener('click', async () => {
-        if(!isAdmin) {
-            alert("Apenas administrador pode cadastrar!");
-            return;
-        }
+        if(!isAdmin) { alert("Apenas administrador"); return; }
         
         let nome = document.getElementById('newName').value.trim();
         let cpf = document.getElementById('newCPF').value.trim();
@@ -1321,40 +1204,28 @@
         let total = parseInt(document.getElementById('newTotal').value);
         let pagas = parseInt(document.getElementById('newPaid').value) || 0;
         let cartao = document.getElementById('newCard').value;
-        let inicioFornecida = document.getElementById('newDate').value;
+        let inicio = document.getElementById('newDate').value;
         
-        if(!nome) { alert("❌ Preencha o Nome"); return; }
-        if(!cpf) { alert("❌ Preencha o CPF"); return; }
-        if(!validarCPF(cpf)) { alert("❌ CPF inválido! Use 12345678909 ou 52998224725"); return; }
-        if(isNaN(valor) || valor <= 0) { alert("❌ Valor inválido"); return; }
-        if(isNaN(total) || total <= 0) { alert("❌ Total de parcelas inválido"); return; }
-        if(pagas >= total) { alert("❌ Parcelas pagas não pode ser >= total"); return; }
+        if(!nome) { alert("Nome obrigatório"); return; }
+        if(!cpf) { alert("CPF obrigatório"); return; }
+        if(!validarCPF(cpf)) { alert("CPF inválido! Use 12345678909"); return; }
+        if(isNaN(valor) || valor <= 0) { alert("Valor inválido"); return; }
+        if(isNaN(total) || total <= 0) { alert("Total inválido"); return; }
+        if(pagas >= total) { alert("Parcelas pagas não pode ser >= total"); return; }
         
-        let inicio = inicioFornecida;
-        if(!inicio) {
-            inicio = calcularDataInicioAuto(pagas, cartao);
-        }
+        if(!inicio) inicio = calcularDataInicioAuto(pagas, cartao);
         
-        const novaDivida = { 
-            id: nextId++, 
-            nome, 
-            cpf,
-            whats, 
-            valorParcela: valor, 
-            totalParcelas: total, 
-            parcelaAtual: pagas + 1, 
-            cartao, 
-            inicio, 
-            pagamentos: [] 
+        const nova = { 
+            id: nextId++, nome, cpf, whats, valorParcela: valor, 
+            totalParcelas: total, parcelaAtual: pagas + 1, cartao, inicio, pagamentos: [] 
         };
         
-        dividas.push(novaDivida);
-        const salvou = await salvarDadosCloud();
-        
-        if(salvou) {
+        dividas.push(nova);
+        showLoading("💾 Salvando...");
+        if(await salvarDadosCloud()) {
             await carregarDadosCloud();
             await atualizarTela();
-            
+            alert(`✅ Cadastrado: ${nome}`);
             document.getElementById('newName').value = '';
             document.getElementById('newCPF').value = '';
             document.getElementById('newWhats').value = '';
@@ -1362,35 +1233,35 @@
             document.getElementById('newTotal').value = '';
             document.getElementById('newPaid').value = '0';
             document.getElementById('newDate').value = '';
-            
-            alert(`✅ Dívida cadastrada com sucesso!\n\n📌 Cliente: ${nome}\n📅 Data início: ${formatarDataBR(inicio)}\n💰 Valor parcela: R$ ${valor.toFixed(2)}\n📦 Total: ${total} parcelas`);
         } else {
-            alert("❌ Erro ao salvar! Verifique sua conexão com a internet.");
+            alert("❌ Erro ao salvar!");
         }
+        hideLoading();
     });
     
     document.getElementById('payInstallmentBtn')?.addEventListener('click', async () => {
         if(!isAdmin) return;
         let senha = document.getElementById('paySenha').value;
-        if(senha !== getAdminSenha()) { alert("❌ Senha incorreta!"); return; }
+        if(senha !== getAdminSenha()) { alert("Senha incorreta!"); return; }
         let id = parseInt(document.getElementById('payLoanSelect').value);
         let data = document.getElementById('payDate').value;
         let divida = dividas.find(d => d.id === id);
-        if(!divida || divida.parcelaAtual > divida.totalParcelas) { alert("❌ Dívida já quitada"); return; }
-        if(!data) { alert("❌ Informe a data do pagamento"); return; }
+        if(!divida || divida.parcelaAtual > divida.totalParcelas) { alert("Dívida quitada"); return; }
+        if(!data) { alert("Data obrigatória"); return; }
+        
         if(!divida.pagamentos) divida.pagamentos = [];
         divida.pagamentos.push({ data, parcela: divida.parcelaAtual });
         divida.parcelaAtual++;
         
-        const salvou = await salvarDadosCloud();
-        if(salvou) {
+        showLoading("💾 Registrando pagamento...");
+        if(await salvarDadosCloud()) {
             await carregarDadosCloud();
             await atualizarTela();
-            alert("✅ Pagamento registrado com sucesso!");
+            alert("✅ Pagamento registrado!");
         } else {
-            alert("❌ Erro ao registrar pagamento!");
+            alert("❌ Erro!");
         }
-        
+        hideLoading();
         document.getElementById('payDate').value = '';
         document.getElementById('paySenha').value = '';
     });
@@ -1398,70 +1269,64 @@
     document.getElementById('saveEditBtn')?.addEventListener('click', async () => {
         if(!isAdmin) return;
         let senha = document.getElementById('editSenha').value;
-        if(senha !== getAdminSenha()) { alert("❌ Senha incorreta!"); return; }
+        if(senha !== getAdminSenha()) { alert("Senha incorreta!"); return; }
         let id = parseInt(document.getElementById('editLoanSelect').value);
         let divida = dividas.find(d => d.id === id);
         if(!divida) return;
         let novoValor = parseFloat(document.getElementById('editInstallmentValue').value);
         let novoTotal = parseInt(document.getElementById('editTotalParcels').value);
-        if(isNaN(novoValor) || isNaN(novoTotal)) { alert("❌ Valores inválidos"); return; }
+        if(isNaN(novoValor) || isNaN(novoTotal)) { alert("Valores inválidos"); return; }
+        
         divida.valorParcela = novoValor;
         if(novoTotal < divida.parcelaAtual) divida.parcelaAtual = novoTotal;
         divida.totalParcelas = novoTotal;
-        if(divida.parcelaAtual > divida.totalParcelas) divida.parcelaAtual = divida.totalParcelas + 1;
         
-        const salvou = await salvarDadosCloud();
-        if(salvou) {
+        showLoading("💾 Salvando...");
+        if(await salvarDadosCloud()) {
             await carregarDadosCloud();
             await atualizarTela();
-            alert("✅ Dívida atualizada com sucesso!");
+            alert("✅ Atualizado!");
         } else {
-            alert("❌ Erro ao atualizar!");
+            alert("❌ Erro!");
         }
+        hideLoading();
         document.getElementById('editSenha').value = '';
     });
     
     document.getElementById('deleteLoanBtn')?.addEventListener('click', async () => {
         if(!isAdmin) return;
         let senha = document.getElementById('editSenha').value;
-        if(senha !== getAdminSenha()) { alert("❌ Senha incorreta!"); return; }
+        if(senha !== getAdminSenha()) { alert("Senha incorreta!"); return; }
         let id = parseInt(document.getElementById('editLoanSelect').value);
         let divida = dividas.find(d => d.id === id);
-        if(confirm(`⚠️ Tem certeza que deseja excluir a dívida de ${divida?.nome}?\n\nEsta ação não pode ser desfeita!`)) {
+        if(confirm(`Excluir ${divida?.nome}?`)) {
             dividas = dividas.filter(d => d.id !== id);
-            const salvou = await salvarDadosCloud();
-            if(salvou) {
+            showLoading("🗑️ Excluindo...");
+            if(await salvarDadosCloud()) {
                 await carregarDadosCloud();
                 await atualizarTela();
-                alert("✅ Dívida excluída com sucesso!");
+                alert("✅ Excluído!");
             } else {
-                alert("❌ Erro ao excluir!");
+                alert("❌ Erro!");
             }
-            document.getElementById('editSenha').value = '';
+            hideLoading();
         }
     });
     
     document.getElementById('btnLimparFiltros')?.addEventListener('click', () => {
-        let filtroNome = document.getElementById('filtroNome');
-        let mesRef = document.getElementById('mesReferencia');
-        if(filtroNome) filtroNome.value = '';
-        if(mesRef) mesRef.value = '';
+        document.getElementById('filtroNome').value = '';
+        document.getElementById('mesReferencia').value = '';
         atualizarTela();
     });
     
     document.getElementById('exportExcelBtn')?.addEventListener('click', () => {
-        let dadosExport = dividas.map(d => ({ 
-            Nome: d.nome, 
-            CPF: formatarCPF(d.cpf),
-            WhatsApp: d.whats || '', 
-            ValorParcela: d.valorParcela, 
-            TotalParcelas: d.totalParcelas, 
-            ParcelaAtual: d.parcelaAtual, 
+        let dados = dividas.map(d => ({ 
+            Nome: d.nome, CPF: formatarCPF(d.cpf), WhatsApp: d.whats, 
+            Valor: d.valorParcela, Total: d.totalParcelas, Atual: d.parcelaAtual,
             Status: d.parcelaAtual > d.totalParcelas ? 'Quitado' : 'Ativo', 
-            Cartão: d.cartao, 
-            Início: formatarDataBR(d.inicio)
+            Cartão: d.cartao, Início: formatarDataBR(d.inicio)
         }));
-        let ws = XLSX.utils.json_to_sheet(dadosExport);
+        let ws = XLSX.utils.json_to_sheet(dados);
         let wb = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(wb, ws, "Dividas");
         XLSX.writeFile(wb, `dividas_${new Date().toISOString().slice(0,10)}.xlsx`);
@@ -1470,7 +1335,7 @@
     document.getElementById('backupBtn')?.addEventListener('click', () => {
         let a = document.createElement('a');
         a.href = URL.createObjectURL(new Blob([JSON.stringify({dividas, nextId})], {type:'application/json'}));
-        a.download = `backup_cartao_${new Date().toISOString().slice(0,19)}.json`;
+        a.download = `backup_${new Date().toISOString().slice(0,19)}.json`;
         a.click();
     });
     
@@ -1487,23 +1352,21 @@
                 let data = JSON.parse(ev.target.result);
                 dividas = data.dividas || [];
                 nextId = data.nextId || 1;
-                const salvou = await salvarDadosCloud();
-                if(salvou) {
+                showLoading("🔄 Restaurando...");
+                if(await salvarDadosCloud()) {
                     await carregarDadosCloud();
                     await atualizarTela();
-                    alert("✅ Backup restaurado com sucesso!");
-                } else {
-                    alert("❌ Erro ao restaurar backup!");
+                    alert("✅ Restaurado!");
                 }
-            } catch(e) { alert("❌ Erro ao ler arquivo de backup"); }
+                hideLoading();
+            } catch(e) { alert("Erro no arquivo"); }
         };
         reader.readAsText(file);
     });
     
     document.getElementById('themeToggle')?.addEventListener('click', () => {
         document.body.classList.toggle('dark');
-        let btn = document.getElementById('themeToggle');
-        if(btn) btn.innerText = document.body.classList.contains('dark') ? '☀️ Modo claro' : '🌙 Modo escuro';
+        document.getElementById('themeToggle').innerText = document.body.classList.contains('dark') ? '☀️ Claro' : '🌙 Escuro';
         if(chartInstance) atualizarGrafico();
     });
     
@@ -1516,7 +1379,6 @@
         document.getElementById('loginNome').value = '';
         document.getElementById('loginCPF').value = '';
         document.getElementById('loginSenha').value = '';
-        document.getElementById('cpfValidationMsg').classList.add('hidden');
     });
     
     document.getElementById('btnLogin')?.addEventListener('click', async () => {
@@ -1525,66 +1387,47 @@
         let senha = document.getElementById('loginSenha').value;
         let errorDiv = document.getElementById('loginError');
         
-        if(!nome) {
-            errorDiv.innerText = 'Digite seu nome';
-            errorDiv.classList.remove('hidden');
-            return;
-        }
-        
-        if(!cpf) {
-            errorDiv.innerText = 'Digite seu CPF';
-            errorDiv.classList.remove('hidden');
-            return;
-        }
-        
-        if(!validarCPF(cpf)) {
-            errorDiv.innerText = 'CPF inválido!';
-            errorDiv.classList.remove('hidden');
-            return;
-        }
+        if(!nome) { errorDiv.innerText = 'Digite seu nome'; errorDiv.classList.remove('hidden'); return; }
+        if(!cpf) { errorDiv.innerText = 'Digite seu CPF'; errorDiv.classList.remove('hidden'); return; }
+        if(!validarCPF(cpf)) { errorDiv.innerText = 'CPF inválido!'; errorDiv.classList.remove('hidden'); return; }
         
         errorDiv.classList.add('hidden');
         const btn = document.getElementById('btnLogin');
-        btn.innerText = '🔄 Carregando...';
+        btn.innerText = '🔄...';
         btn.disabled = true;
         
-        showLoading("🔐 Verificando credenciais...");
+        showLoading("🔐 Entrando...");
         await carregarDadosCloud();
         
-        // Verifica se é administrador
         if(senha === getAdminSenha()) {
             isAdmin = true;
             currentUser = nome;
             currentCPF = cpf;
-            document.getElementById('currentUserName').innerHTML = `${nome} (Admin - ${formatarCPF(cpf)})`;
+            document.getElementById('currentUserName').innerHTML = `${nome} (Admin)`;
             document.getElementById('adminBadge').classList.remove('hidden');
             document.getElementById('adminActions').style.display = 'flex';
         } else {
-            // Se não for admin, verifica se existe dívida
-            const userExists = dividas.some(d => d.nome.toLowerCase().trim() === nome.toLowerCase().trim() && d.cpf === cpf);
-            
-            if(!userExists) {
+            const existe = dividas.some(d => d.nome.toLowerCase().trim() === nome.toLowerCase().trim() && d.cpf === cpf);
+            if(!existe) {
                 hideLoading();
-                errorDiv.innerText = '❌ Nenhuma dívida encontrada para este nome e CPF!';
+                errorDiv.innerText = '❌ Nenhuma dívida para este nome e CPF!';
                 errorDiv.classList.remove('hidden');
                 btn.innerText = '🔓 Entrar';
                 btn.disabled = false;
                 return;
             }
-            
             if(senha) {
                 hideLoading();
-                errorDiv.innerText = '⚠️ Clientes não precisam de senha! Apenas nome e CPF.';
+                errorDiv.innerText = '⚠️ Cliente não precisa de senha!';
                 errorDiv.classList.remove('hidden');
                 btn.innerText = '🔓 Entrar';
                 btn.disabled = false;
                 return;
             }
-            
             isAdmin = false;
             currentUser = nome;
             currentCPF = cpf;
-            document.getElementById('currentUserName').innerHTML = `${nome} (${formatarCPF(cpf)})`;
+            document.getElementById('currentUserName').innerHTML = `${nome}`;
             document.getElementById('adminBadge').classList.add('hidden');
             document.getElementById('adminActions').style.display = 'none';
         }
@@ -1598,16 +1441,6 @@
         btn.disabled = false;
     });
     
-    document.getElementById('loginNome')?.addEventListener('keypress', (e) => {
-        if(e.key === 'Enter') document.getElementById('btnLogin').click();
-    });
-    document.getElementById('loginCPF')?.addEventListener('keypress', (e) => {
-        if(e.key === 'Enter') document.getElementById('btnLogin').click();
-    });
-    document.getElementById('loginSenha')?.addEventListener('keypress', (e) => {
-        if(e.key === 'Enter') document.getElementById('btnLogin').click();
-    });
-    
     document.querySelectorAll('.action-btn').forEach(btn => {
         btn.addEventListener('click', () => setAcao(btn.getAttribute('data-acao')));
     });
@@ -1617,10 +1450,7 @@
     document.getElementById('filtroNome')?.addEventListener('input', () => atualizarTela());
     document.getElementById('mesReferencia')?.addEventListener('change', () => atualizarTela());
     
-    // Inicialização
-    (async () => {
-        await carregarDadosCloud();
-    })();
+    // NÃO carrega dados antes do login - só carrega quando clicar em entrar
 </script>
 </body>
 </html>
