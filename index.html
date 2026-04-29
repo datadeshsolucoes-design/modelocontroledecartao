@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Controle do Cartão - Dashboard</title>
+    <title>Controle do Cartão</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
     <style>
@@ -11,7 +11,7 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: system-ui, 'Segoe UI', 'Inter', 'Helvetica Neue', sans-serif;
+            font-family: system-ui, 'Segoe UI', sans-serif;
         }
 
         :root {
@@ -26,27 +26,12 @@
             --danger: #ef4444;
             --warning: #f59e0b;
             --purple: #8b5cf6;
-            --shadow: 0 10px 25px -5px rgba(0,0,0,0.05);
-        }
-
-        body.dark {
-            --bg: #0f172a;
-            --card: #1e293b;
-            --text: #f1f5f9;
-            --text-light: #94a3b8;
-            --border: #334155;
         }
 
         body {
             background: var(--bg);
             color: var(--text);
             padding: 20px;
-            font-size: 18px;
-        }
-
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
         }
 
         .login-container {
@@ -56,67 +41,38 @@
             border-radius: 32px;
             padding: 35px;
             border: 1px solid var(--border);
-            box-shadow: var(--shadow);
             text-align: center;
-        }
-
-        .login-container h2 {
-            margin-bottom: 10px;
-            color: var(--primary);
-        }
-
-        .login-container p {
-            margin-bottom: 25px;
-            color: var(--text-light);
-            font-size: 0.9rem;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
         }
 
         .login-container input {
             margin-bottom: 20px;
-            text-align: center;
-            font-size: 1.1rem;
             padding: 12px;
             width: 100%;
+            border-radius: 16px;
+            border: 1px solid var(--border);
         }
 
         .login-container button {
             width: 100%;
             padding: 12px;
-            font-size: 1rem;
-        }
-
-        .login-error {
-            color: var(--danger);
-            margin-top: 15px;
-            font-size: 0.85rem;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 16px;
+            font-weight: bold;
+            cursor: pointer;
         }
 
         .user-bar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
             background: var(--card);
             padding: 12px 24px;
             border-radius: 60px;
             margin-bottom: 25px;
-            border: 1px solid var(--border);
-            flex-wrap: wrap;
-            gap: 15px;
-        }
-
-        .user-info {
             display: flex;
+            justify-content: space-between;
             align-items: center;
-            gap: 15px;
             flex-wrap: wrap;
-        }
-
-        .user-name {
-            font-weight: bold;
-            color: var(--primary);
-            background: var(--bg);
-            padding: 5px 15px;
-            border-radius: 40px;
         }
 
         .admin-badge {
@@ -125,120 +81,6 @@
             padding: 4px 12px;
             border-radius: 20px;
             font-size: 0.7rem;
-            font-weight: bold;
-        }
-
-        .logout-btn {
-            background: var(--danger);
-            color: white;
-            border: none;
-            padding: 6px 16px;
-            border-radius: 40px;
-            cursor: pointer;
-            font-size: 0.8rem;
-        }
-
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            margin-bottom: 30px;
-            gap: 15px;
-        }
-
-        h1 {
-            font-size: 1.8rem;
-            background: linear-gradient(135deg, var(--primary), var(--purple));
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-        }
-
-        .theme-toggle {
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: 60px;
-            padding: 8px 20px;
-            cursor: pointer;
-            font-weight: 500;
-            color: var(--text);
-            font-size: 0.9rem;
-        }
-
-        .controls-bar {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
-            align-items: center;
-            background: var(--card);
-            padding: 15px 20px;
-            border-radius: 24px;
-            margin-bottom: 25px;
-            border: 1px solid var(--border);
-            position: relative;
-        }
-        
-        .filters-identifier {
-            position: absolute;
-            top: -12px;
-            left: 20px;
-            background: var(--primary);
-            color: white;
-            font-size: 0.7rem;
-            font-weight: bold;
-            padding: 2px 12px;
-            border-radius: 20px;
-        }
-
-        .filter-group {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            background: var(--bg);
-            padding: 5px 12px;
-            border-radius: 40px;
-        }
-
-        .filter-group label {
-            font-weight: 600;
-            font-size: 0.9rem;
-        }
-
-        select, input {
-            padding: 8px 12px;
-            border-radius: 40px;
-            border: 1px solid var(--border);
-            background: var(--card);
-            color: var(--text);
-            font-size: 0.9rem;
-        }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-
-        .stat-card {
-            background: var(--card);
-            border-radius: 24px;
-            padding: 20px;
-            box-shadow: var(--shadow);
-            border: 1px solid var(--border);
-        }
-
-        .stat-card h3 {
-            font-size: 0.8rem;
-            font-weight: 500;
-            color: var(--text-light);
-            margin-bottom: 8px;
-        }
-
-        .stat-card .value {
-            font-size: 1.8rem;
-            font-weight: 700;
         }
 
         .action-buttons {
@@ -251,18 +93,14 @@
         .action-btn {
             background: var(--card);
             border: 1px solid var(--border);
-            padding: 12px 24px;
+            padding: 10px 20px;
             border-radius: 40px;
-            font-weight: 600;
-            font-size: 0.9rem;
             cursor: pointer;
-            color: var(--text);
         }
 
         .action-btn.active {
             background: var(--primary);
             color: white;
-            border-color: var(--primary);
         }
 
         .form-panel {
@@ -270,8 +108,8 @@
             border-radius: 24px;
             padding: 24px;
             margin-bottom: 30px;
-            border: 1px solid var(--border);
             display: none;
+            border: 1px solid var(--border);
         }
 
         .form-panel.active {
@@ -290,40 +128,26 @@
             min-width: 150px;
         }
 
-        label {
+        .form-group label {
             font-size: 0.75rem;
-            font-weight: 600;
+            font-weight: bold;
             display: block;
             margin-bottom: 5px;
-            color: var(--text-light);
         }
 
         input, select, button {
-            width: 100%;
             padding: 10px 14px;
             border-radius: 16px;
             border: 1px solid var(--border);
-            background: var(--bg);
-            color: var(--text);
-            font-size: 0.9rem;
+            width: 100%;
         }
 
         button {
             background: var(--primary);
             color: white;
-            border: none;
-            font-weight: 600;
             cursor: pointer;
+            font-weight: bold;
         }
-
-        button:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-        }
-
-        .btn-danger { background: var(--danger); }
-        .btn-warning { background: var(--warning); }
-        .btn-sm { padding: 6px 12px; font-size: 0.75rem; width: auto; }
 
         .tabs-container {
             display: flex;
@@ -335,12 +159,9 @@
         .filter-tab {
             background: var(--card);
             border: 1px solid var(--border);
-            padding: 10px 20px;
+            padding: 8px 16px;
             border-radius: 40px;
-            font-weight: 600;
-            font-size: 0.85rem;
             cursor: pointer;
-            color: var(--text);
         }
 
         .filter-tab.active {
@@ -348,60 +169,27 @@
             color: white;
         }
 
-        .chart-container {
-            background: var(--card);
-            border-radius: 24px;
-            padding: 20px;
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 16px;
             margin-bottom: 30px;
-            border: 1px solid var(--border);
         }
-        canvas { max-height: 350px; width: 100%; }
 
-        .divida-card {
+        .stat-card {
             background: var(--card);
             border-radius: 20px;
             padding: 16px;
-            margin-bottom: 16px;
-            border-left: 5px solid var(--primary);
-            box-shadow: var(--shadow);
-        }
-
-        .divida-header {
-            display: flex;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            margin-bottom: 10px;
-            font-weight: 700;
-        }
-
-        .badge {
-            background: var(--bg);
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 0.7rem;
-        }
-
-        .progress-bar {
-            height: 6px;
-            background: var(--border);
-            border-radius: 10px;
-            margin: 12px 0;
-        }
-
-        .progress-fill {
-            background: var(--success);
-            height: 100%;
-            border-radius: 10px;
+            border: 1px solid var(--border);
         }
 
         .data-table {
             width: 100%;
             border-collapse: collapse;
             background: var(--card);
-            border-radius: 20px;
+            border-radius: 16px;
             overflow: hidden;
-            margin-top: 15px;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
         }
 
         .data-table th {
@@ -416,81 +204,41 @@
             border-bottom: 1px solid var(--border);
         }
 
-        .table-container {
-            overflow-x: auto;
-        }
-
-        .modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.5);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-        }
-
-        .modal-content {
+        .divida-card {
             background: var(--card);
-            padding: 25px;
-            border-radius: 24px;
-            width: 90%;
-            max-width: 400px;
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 12px;
+            border-left: 4px solid var(--primary);
         }
 
         .hidden {
             display: none;
         }
 
-        .cpf-field {
-            margin-bottom: 15px;
-        }
+        .cpf-valid { color: var(--success); font-size: 0.7rem; }
+        .cpf-invalid { color: var(--danger); font-size: 0.7rem; }
+        .login-error { color: var(--danger); margin-top: 15px; font-size: 0.85rem; }
 
-        .cpf-valid {
-            color: var(--success);
-            font-size: 0.7rem;
-            margin-top: 5px;
-        }
-
-        .cpf-invalid {
-            color: var(--danger);
-            font-size: 0.7rem;
-            margin-top: 5px;
-        }
-
-        .reset-password-btn {
-            background: var(--warning);
-            margin-top: 10px;
-        }
-
-        .btn-back {
-            background: var(--text-light);
-            margin-top: 10px;
-        }
-
-        /* LOADING RÁPIDO */
         .loading-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.8);
+            background: rgba(0,0,0,0.7);
             display: flex;
             justify-content: center;
             align-items: center;
             z-index: 10000;
             flex-direction: column;
-            gap: 20px;
+            gap: 15px;
         }
 
         .loading-spinner {
             width: 50px;
             height: 50px;
-            border: 4px solid var(--border);
+            border: 4px solid white;
             border-top-color: var(--primary);
             border-radius: 50%;
             animation: spin 0.8s linear infinite;
@@ -503,73 +251,43 @@
         .loading-text {
             color: white;
             font-size: 1rem;
-            background: rgba(0,0,0,0.7);
-            padding: 8px 16px;
-            border-radius: 40px;
-        }
-
-        @media (max-width: 700px) {
-            body { padding: 12px; font-size: 16px; }
-            .stat-card .value { font-size: 1.3rem; }
-            .action-btn, .filter-tab { padding: 8px 14px; font-size: 0.8rem; }
-            .user-bar { flex-direction: column; text-align: center; }
         }
     </style>
 </head>
 <body>
 
-<!-- TELA DE LOGIN -->
 <div id="loginScreen" class="login-container">
     <h2>💳 Controle do Cartão</h2>
-    <p>Digite seu nome e CPF para visualizar suas dívidas</p>
-    <input type="text" id="loginNome" placeholder="Seu nome completo" autocomplete="off">
-    <div class="cpf-field">
-        <input type="text" id="loginCPF" placeholder="CPF (apenas números)" maxlength="11" autocomplete="off">
-        <div id="cpfValidationMsg" class="cpf-invalid hidden"></div>
-    </div>
+    <p>Digite seu nome e CPF</p>
+    <input type="text" id="loginNome" placeholder="Seu nome completo">
+    <input type="text" id="loginCPF" placeholder="CPF (apenas números)" maxlength="11">
+    <div id="cpfValidationMsg" class="cpf-invalid hidden"></div>
     <input type="password" id="loginSenha" placeholder="Senha do administrador">
     <button id="btnLogin">🔓 Entrar</button>
-    <button id="btnResetPassword" class="reset-password-btn">🔄 Esqueci minha senha (Admin)</button>
+    <button id="btnResetPassword" style="background: var(--warning); margin-top: 10px;">🔄 Esqueci minha senha</button>
     <div id="loginError" class="login-error hidden"></div>
 </div>
 
-<!-- TELA DE REDEFINIÇÃO DE SENHA -->
 <div id="resetPasswordScreen" class="login-container hidden">
     <h2>🔄 Redefinir Senha</h2>
     <p>Digite seu CPF e a nova senha</p>
-    <div class="cpf-field">
-        <input type="text" id="resetCPF" placeholder="CPF (apenas números)" maxlength="11">
-        <div id="resetCpfValidationMsg" class="cpf-invalid hidden"></div>
-    </div>
+    <input type="text" id="resetCPF" placeholder="CPF" maxlength="11">
+    <div id="resetCpfValidationMsg" class="cpf-invalid hidden"></div>
     <input type="password" id="resetNewPassword" placeholder="Nova senha">
-    <input type="password" id="resetConfirmPassword" placeholder="Confirmar nova senha">
-    <button id="btnConfirmReset">✅ Confirmar redefinição</button>
-    <button id="btnBackToLogin" class="btn-back">🔙 Voltar ao login</button>
+    <input type="password" id="resetConfirmPassword" placeholder="Confirmar senha">
+    <button id="btnConfirmReset">✅ Confirmar</button>
+    <button id="btnBackToLogin" style="background: gray;">🔙 Voltar</button>
     <div id="resetError" class="login-error hidden"></div>
 </div>
 
-<!-- CONTEÚDO PRINCIPAL -->
 <div id="mainContent" style="display: none;">
     <div class="container">
-        <div class="header">
-            <h1>💳 Controle do Cartão</h1>
-            <button class="theme-toggle" id="themeToggle">🌙 Modo escuro</button>
-        </div>
-
         <div class="user-bar">
             <div class="user-info">
-                <span>👤 Conectado como:</span>
-                <span class="user-name" id="currentUserName"></span>
+                <span>👤 Conectado: <strong id="currentUserName"></strong></span>
                 <span id="adminBadge" class="admin-badge hidden">👑 Administrador</span>
             </div>
-            <button class="logout-btn" id="logoutBtn">🚪 Sair</button>
-        </div>
-
-        <div class="controls-bar">
-            <div class="filters-identifier">🔍 ÁREA DE FILTROS</div>
-            <div class="filter-group"><label>📅 Mês referência:</label><input type="month" id="mesReferencia"></div>
-            <div class="filter-group"><label>🔍 Nome:</label><input type="text" id="filtroNome" placeholder="Filtrar por nome"></div>
-            <button id="btnLimparFiltros" style="background:var(--text-light); width:auto;">🧹 Limpar</button>
+            <button class="logout-btn" id="logoutBtn" style="background: var(--danger); color: white; padding: 6px 16px; border-radius: 40px;">🚪 Sair</button>
         </div>
 
         <div class="stats-grid" id="statsGrid"></div>
@@ -577,25 +295,27 @@
         <div id="adminActions" class="action-buttons" style="display: none;">
             <button class="action-btn active" data-acao="newLoan">➕ Nova dívida</button>
             <button class="action-btn" data-acao="pay">💰 Pagar parcela</button>
-            <button class="action-btn" data-acao="edit">✏️ Editar/Excluir</button>
-            <button class="action-btn" data-acao="backup">💾 Backup/Excel</button>
+            <button class="action-btn" data-acao="edit">✏️ Editar</button>
+            <button class="action-btn" data-acao="backup">💾 Backup</button>
         </div>
 
         <div id="form-newLoan" class="form-panel">
-            <h3>➕ Cadastrar nova dívida</h3>
+            <h3>➕ Nova dívida</h3>
             <div class="form-row">
-                <div class="form-group"><label>Nome completo *</label><input type="text" id="newName" placeholder="Ex: Ana Silva"></div>
-                <div class="form-group"><label>CPF *</label><input type="text" id="newCPF" placeholder="Apenas números" maxlength="11"></div>
+                <div class="form-group"><label>Nome</label><input type="text" id="newName" placeholder="Nome completo"></div>
+                <div class="form-group"><label>CPF</label><input type="text" id="newCPF" placeholder="Apenas números" maxlength="11"></div>
                 <div class="form-group"><label>WhatsApp</label><input type="text" id="newWhats" placeholder="11999999999"></div>
-                <div class="form-group"><label>Valor (R$) *</label><input type="number" id="newInstallment" placeholder="275"></div>
-                <div class="form-group"><label>Total parcelas *</label><input type="number" id="newTotal" placeholder="10"></div>
             </div>
             <div class="form-row">
-                <div class="form-group"><label>Parcelas pagas</label><input type="number" id="newPaid" placeholder="0" value="0"></div>
+                <div class="form-group"><label>Valor da parcela (R$)</label><input type="number" id="newInstallment" placeholder="275"></div>
+                <div class="form-group"><label>Total parcelas</label><input type="number" id="newTotal" placeholder="10"></div>
+                <div class="form-group"><label>Parcelas pagas</label><input type="number" id="newPaid" value="0"></div>
+            </div>
+            <div class="form-row">
                 <div class="form-group"><label>Cartão</label><select id="newCard"><option value="A">Cartão A</option><option value="B">Cartão B</option></select></div>
                 <div class="form-group"><label>Data início</label><input type="date" id="newDate"></div>
             </div>
-            <button id="createLoanBtn">✅ Criar dívida</button>
+            <button id="createLoanBtn">✅ Criar</button>
         </div>
 
         <div id="form-pay" class="form-panel">
@@ -605,24 +325,24 @@
                 <div class="form-group"><label>Data pagamento</label><input type="date" id="payDate"></div>
             </div>
             <div class="form-row">
-                <div class="form-group"><label>🔐 Senha</label><input type="password" id="paySenha"></div>
+                <div class="form-group"><label>Senha</label><input type="password" id="paySenha"></div>
             </div>
             <button id="payInstallmentBtn">✅ Confirmar</button>
         </div>
 
         <div id="form-edit" class="form-panel">
-            <h3>✏️ Editar/Excluir</h3>
+            <h3>✏️ Editar dívida</h3>
             <div class="form-row">
                 <div class="form-group"><label>Dívida</label><select id="editLoanSelect"></select></div>
                 <div class="form-group"><label>Valor (R$)</label><input type="number" id="editInstallmentValue"></div>
                 <div class="form-group"><label>Total parcelas</label><input type="number" id="editTotalParcels"></div>
             </div>
             <div class="form-row">
-                <div class="form-group"><label>🔐 Senha</label><input type="password" id="editSenha"></div>
+                <div class="form-group"><label>Senha</label><input type="password" id="editSenha"></div>
             </div>
             <div class="form-row">
                 <button id="saveEditBtn">💾 Salvar</button>
-                <button id="deleteLoanBtn" class="btn-danger">🗑️ Excluir</button>
+                <button id="deleteLoanBtn" class="btn-danger" style="background: var(--danger);">🗑️ Excluir</button>
             </div>
         </div>
 
@@ -630,7 +350,7 @@
             <h3>💾 Backup</h3>
             <div class="form-row">
                 <button id="exportExcelBtn">📊 Excel</button>
-                <button id="backupBtn">📁 Backup</button>
+                <button id="backupBtn">📁 Backup JSON</button>
                 <button id="restoreBtn">🔄 Restaurar</button>
                 <input type="file" id="restoreFile" accept=".json" style="display:none">
             </div>
@@ -645,45 +365,26 @@
         </div>
 
         <div id="graficosContainer" style="display: none;">
-            <div class="chart-container">
+            <div class="chart-container" style="background: var(--card); border-radius: 20px; padding: 20px;">
                 <canvas id="evolucaoChart"></canvas>
             </div>
         </div>
 
         <div id="conteudoListas">
-            <div id="divActiveLoans">
-                <h2>📋 Dívidas ativas</h2>
-                <div id="activeLoansList"></div>
-            </div>
-            <div id="divQuitadasLista" style="display: none;">
-                <h2>✅ Quitadas</h2>
-                <div class="table-container">
-                    <table class="data-table">
-                        <thead><tr><th>Nome</th><th>CPF</th><th>Cartão</th><th>Total</th><th>Valor</th><th>Total Pago</th><th>Quitação</th><th>WhatsApp</th></td></thead>
-                        <tbody id="quitadasTableBody"></tbody>
-                    </table>
-                </div>
-            </div>
-            <div id="divTabelaGeral">
-                <h2>📊 Tabela geral</h2>
-                <div class="table-container">
-                    <table class="data-table">
-                        <thead><tr><th>Nome</th><th>CPF</th><th>Cartão</th><th>Parcela</th><th>Valor</th><th>Restam</th><th>Total pendente</th><th>Vencimento</th><th>WhatsApp</th></tr></thead>
-                        <tbody id="tableBody"></tbody>
-                    </table>
-                </div>
-            </div>
+            <div id="divActiveLoans"><h2>📋 Dívidas ativas</h2><div id="activeLoansList"></div></div>
+            <div id="divQuitadasLista" style="display: none;"><h2>✅ Quitadas</h2><div id="quitadasTableBody"></div></div>
+            <div id="divTabelaGeral"><h2>📊 Tabela geral</h2><div id="tableBody"></div></div>
         </div>
     </div>
 </div>
 
-<div id="modalWhats" class="modal hidden">
-    <div class="modal-content">
+<div id="modalWhats" class="modal hidden" style="position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); display:flex; justify-content:center; align-items:center; z-index:1000;">
+    <div style="background: white; padding: 25px; border-radius: 24px; max-width: 400px; width:90%">
         <h3>📲 WhatsApp</h3>
-        <input type="text" id="whatsNumero" placeholder="Número">
-        <textarea id="whatsMensagem" rows="4" placeholder="Mensagem..."></textarea>
+        <input type="text" id="whatsNumero" placeholder="Número" style="width:100%; margin:10px 0; padding:10px;">
+        <textarea id="whatsMensagem" rows="4" style="width:100%; margin:10px 0; padding:10px;"></textarea>
         <button id="btnEnviarWhats" style="background:#25D366;">📲 Enviar</button>
-        <button id="btnFecharWhats">Cancelar</button>
+        <button id="btnFecharWhats" style="background:gray;">Cancelar</button>
     </div>
 </div>
 
@@ -696,46 +397,27 @@
     const API_URL = 'https://script.google.com/macros/s/AKfycbzYEI57ASfV_gdy8DRIpVmJ96D8FyuVR0o-6e2-zKWRzMz_06nZslCxOJf-ULSw9vgB/exec';
     const ADMIN_CPF = "12345678909";
     const SENHA_PADRAO = "123456";
-    const STORAGE_KEY = "admin_password";
     
     let dividas = [];
-    let nextId = 1;
-    let currentUser = null;
-    let currentCPF = null;
-    let isAdmin = false;
-    let currentMonth = new Date().toISOString().slice(0,7);
+    let currentUser = null, currentCPF = null, isAdmin = false;
     let abaFiltroAtual = "A";
     let chartInstance = null;
 
-    function showLoading(msg = "⏳ Processando...") {
-        const overlay = document.getElementById('loadingOverlay');
-        document.getElementById('loadingText').textContent = msg;
-        overlay.classList.remove('hidden');
+    function showLoading(msg) { 
+        document.getElementById('loadingText').textContent = msg || "⏳ Processando...";
+        document.getElementById('loadingOverlay').classList.remove('hidden'); 
     }
-
-    function hideLoading() {
-        document.getElementById('loadingOverlay').classList.add('hidden');
-    }
-
-    function getAdminSenha() {
-        return localStorage.getItem(STORAGE_KEY) || SENHA_PADRAO;
-    }
-
-    function setAdminSenha(nova) {
-        localStorage.setItem(STORAGE_KEY, nova);
-    }
+    function hideLoading() { document.getElementById('loadingOverlay').classList.add('hidden'); }
 
     function validarCPF(cpf) {
-        cpf = cpf.replace(/[^\d]/g, '');
+        cpf = cpf.replace(/\D/g, '');
         if (cpf.length !== 11) return false;
         if (/^(\d)\1{10}$/.test(cpf)) return false;
-        
         let soma = 0;
         for (let i = 0; i < 9; i++) soma += parseInt(cpf.charAt(i)) * (10 - i);
         let resto = 11 - (soma % 11);
         let digito1 = (resto === 10 || resto === 11) ? 0 : resto;
         if (digito1 !== parseInt(cpf.charAt(9))) return false;
-        
         soma = 0;
         for (let i = 0; i < 10; i++) soma += parseInt(cpf.charAt(i)) * (11 - i);
         resto = 11 - (soma % 11);
@@ -744,459 +426,224 @@
     }
 
     function formatarCPF(cpf) {
-        cpf = cpf.replace(/[^\d]/g, '');
-        if (cpf.length === 11) {
-            return cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
-        }
+        cpf = cpf.replace(/\D/g, '');
+        if (cpf.length === 11) return cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
         return cpf;
     }
 
     function formatarDataBR(dataISO) {
-        if(!dataISO) return '';
-        if(dataISO.includes('/')) return dataISO;
+        if (!dataISO) return '';
         let dataLimpa = dataISO.split('T')[0];
         let partes = dataLimpa.split('-');
-        if(partes.length !== 3) return dataISO;
+        if (partes.length !== 3) return dataISO;
         return `${partes[2]}/${partes[1]}/${partes[0]}`;
     }
 
     function calcularDataInicioAuto(pagas, cartao) {
-        let dataAtual = new Date();
-        let diaVencimento = cartao === 'A' ? 10 : 25;
-        let ano = dataAtual.getFullYear();
-        let mes = dataAtual.getMonth();
-        let diaAtual = dataAtual.getDate();
-        
-        let dataCalculada;
-        if (diaAtual > diaVencimento) {
-            dataCalculada = new Date(ano, mes + 1, diaVencimento);
-        } else {
-            dataCalculada = new Date(ano, mes, diaVencimento);
-        }
-        if(pagas > 0) {
-            dataCalculada.setMonth(dataCalculada.getMonth() - pagas);
-        }
-        return dataCalculada.toISOString().split('T')[0];
+        let hoje = new Date();
+        let diaVenc = cartao === 'A' ? 10 : 25;
+        let data = new Date(hoje.getFullYear(), hoje.getMonth(), diaVenc);
+        if (hoje.getDate() > diaVenc) data.setMonth(data.getMonth() + 1);
+        if (pagas > 0) data.setMonth(data.getMonth() - pagas);
+        return data.toISOString().split('T')[0];
     }
 
     function calcularVencimento(inicio, parcelaAtual, cartao) {
-        if(!inicio) return null;
-        let dataInicio = inicio.split('T')[0];
-        let [ano, mes, dia] = dataInicio.split('-').map(Number);
+        if (!inicio) return null;
+        let [ano, mes, dia] = inicio.split('-').map(Number);
         let diaVenc = cartao === 'A' ? 10 : 25;
         let mesVenc = mes + (parcelaAtual - 1);
         let anoVenc = ano;
-        while(mesVenc > 12) { mesVenc -= 12; anoVenc++; }
+        while (mesVenc > 12) { mesVenc -= 12; anoVenc++; }
         let ultimoDia = new Date(anoVenc, mesVenc, 0).getDate();
         let finalDia = Math.min(diaVenc, ultimoDia);
-        return `${String(finalDia).padStart(2,'0')}/${String(mesVenc).padStart(2,'0')}/${anoVenc}`;
+        return `${finalDia.toString().padStart(2,'0')}/${mesVenc.toString().padStart(2,'0')}/${anoVenc}`;
     }
 
-    async function carregarDadosCloud() {
+    async function carregarDados() {
         try {
-            const response = await fetch(`${API_URL}?action=load`);
-            const result = await response.json();
-            
-            if(result.success && result.data) {
-                dividas = result.data.map(row => ({
-                    id: parseInt(row[0]),
-                    nome: row[1],
-                    cpf: row[2] || '',
-                    whats: row[3] || '',
-                    valorParcela: parseFloat(row[4]),
-                    totalParcelas: parseInt(row[5]),
-                    parcelaAtual: parseInt(row[6]),
-                    cartao: row[7],
-                    inicio: row[8] ? row[8].split('T')[0] : '',
+            const res = await fetch(`${API_URL}?action=load`);
+            const data = await res.json();
+            if (data.success && data.data) {
+                dividas = data.data.map(row => ({
+                    id: parseInt(row[0]), nome: row[1], cpf: row[2] || '', whats: row[3] || '',
+                    valorParcela: parseFloat(row[4]), totalParcelas: parseInt(row[5]),
+                    parcelaAtual: parseInt(row[6]), cartao: row[7], inicio: row[8] ? row[8].split('T')[0] : '',
                     pagamentos: row[9] ? JSON.parse(row[9]) : []
                 }));
-                nextId = dividas.length > 0 ? Math.max(...dividas.map(d => d.id)) + 1 : 1;
-                return true;
             }
-            return false;
-        } catch(e) {
-            console.error(e);
-            return false;
-        }
+            return true;
+        } catch(e) { return false; }
     }
 
-    async function salvarDadosCloud() {
+    async function salvarDados() {
         try {
-            const response = await fetch(`${API_URL}?action=save&dados=${encodeURIComponent(JSON.stringify(dividas))}`);
-            const result = await response.json();
-            return result.success;
-        } catch(e) {
-            console.error(e);
-            return false;
-        }
+            const res = await fetch(`${API_URL}?action=save&dados=${encodeURIComponent(JSON.stringify(dividas))}`);
+            const data = await res.json();
+            return data.success;
+        } catch(e) { return false; }
     }
 
     function getFilteredAtivos() {
         let ativos = dividas.filter(d => d.parcelaAtual <= d.totalParcelas);
-        if(!isAdmin && currentUser && currentCPF) {
-            ativos = ativos.filter(d => d.nome.toLowerCase().trim() === currentUser.toLowerCase().trim() && d.cpf === currentCPF);
-        }
-        let nomeFiltro = document.getElementById('filtroNome')?.value.toLowerCase().trim();
-        if(nomeFiltro) ativos = ativos.filter(d => d.nome.toLowerCase().includes(nomeFiltro));
-        if(abaFiltroAtual !== 'all' && abaFiltroAtual !== 'quitadas' && abaFiltroAtual !== 'graficos') {
-            if(abaFiltroAtual === 'A' || abaFiltroAtual === 'B') {
-                ativos = ativos.filter(d => d.cartao === abaFiltroAtual);
-            }
-        }
+        if (!isAdmin && currentCPF) ativos = ativos.filter(d => d.nome.toLowerCase().trim() === currentUser?.toLowerCase().trim() && d.cpf === currentCPF);
+        if (abaFiltroAtual === 'A' || abaFiltroAtual === 'B') ativos = ativos.filter(d => d.cartao === abaFiltroAtual);
         return ativos;
     }
 
-    function getQuitadas() {
-        let quitadas = dividas.filter(d => d.parcelaAtual > d.totalParcelas);
-        if(!isAdmin && currentUser && currentCPF) {
-            quitadas = quitadas.filter(d => d.nome.toLowerCase().trim() === currentUser.toLowerCase().trim() && d.cpf === currentCPF);
-        }
-        let nomeFiltro = document.getElementById('filtroNome')?.value.toLowerCase().trim();
-        if(nomeFiltro) quitadas = quitadas.filter(d => d.nome.toLowerCase().includes(nomeFiltro));
-        return quitadas;
-    }
-
-    function getPaymentsInMonth(month) {
-        let total = 0;
-        let filtradas = isAdmin ? dividas : dividas.filter(d => d.nome.toLowerCase().trim() === currentUser?.toLowerCase().trim() && d.cpf === currentCPF);
-        filtradas.forEach(d => {
-            d.pagamentos?.forEach(p => { if(p.data.startsWith(month)) total += d.valorParcela; });
-        });
-        return total;
-    }
-
-    function getDueInMonth(month) {
-        let total = 0;
-        let filtradas = isAdmin ? dividas : dividas.filter(d => d.nome.toLowerCase().trim() === currentUser?.toLowerCase().trim() && d.cpf === currentCPF);
-        filtradas.forEach(d => {
-            if(d.parcelaAtual > d.totalParcelas) return;
-            for(let i = d.parcelaAtual; i <= d.totalParcelas; i++) {
-                let venc = calcularVencimento(d.inicio, i, d.cartao);
-                if(venc) {
-                    let [dia, mes, ano] = venc.split('/');
-                    let dueStr = `${ano}-${mes}`;
-                    if(dueStr === month) total += d.valorParcela;
-                }
-            }
-        });
-        return total;
-    }
-
-    function getDadosGrafico() {
-        let hoje = new Date();
-        let meses = [], pagos = [], aPagar = [];
-        let filtradas = isAdmin ? dividas : dividas.filter(d => d.nome.toLowerCase().trim() === currentUser?.toLowerCase().trim() && d.cpf === currentCPF);
-        
-        for(let i = 5; i >= 0; i--) {
-            let data = new Date(hoje.getFullYear(), hoje.getMonth() - i, 1);
-            let mesStr = `${data.getFullYear()}-${String(data.getMonth()+1).padStart(2,'0')}`;
-            meses.push(mesStr);
-            let totalPago = 0, totalDevido = 0;
-            filtradas.forEach(d => {
-                d.pagamentos?.forEach(p => { if(p.data.startsWith(mesStr)) totalPago += d.valorParcela; });
-                if(d.parcelaAtual <= d.totalParcelas) {
-                    for(let j = d.parcelaAtual; j <= d.totalParcelas; j++) {
-                        let venc = calcularVencimento(d.inicio, j, d.cartao);
-                        if(venc) {
-                            let [dia, mes, ano] = venc.split('/');
-                            let dueStr = `${ano}-${mes}`;
-                            if(dueStr === mesStr) totalDevido += d.valorParcela;
-                        }
-                    }
-                }
-            });
-            pagos.push(totalPago);
-            aPagar.push(totalDevido);
-        }
-        return { meses, pagos, aPagar };
-    }
-
-    function atualizarGrafico() {
-        const ctx = document.getElementById('evolucaoChart')?.getContext('2d');
-        if(!ctx) return;
-        const { meses, pagos, aPagar } = getDadosGrafico();
-        if(chartInstance) chartInstance.destroy();
-        chartInstance = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: meses,
-                datasets: [
-                    { label: '💰 Pagamentos', data: pagos, borderColor: '#10b981', tension: 0.3, fill: true },
-                    { label: '📅 A vencer', data: aPagar, borderColor: '#f59e0b', tension: 0.3, fill: true }
-                ]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    tooltip: { callbacks: { label: (ctx) => `R$ ${ctx.raw.toLocaleString('pt-BR')}` } }
-                }
-            }
-        });
-    }
-
-    function alternarVisao() {
-        const graficosDiv = document.getElementById('graficosContainer');
-        const divActive = document.getElementById('divActiveLoans');
-        const divQuitadas = document.getElementById('divQuitadasLista');
-        const divTabela = document.getElementById('divTabelaGeral');
-        
-        if(abaFiltroAtual === 'graficos') {
-            graficosDiv.style.display = 'block';
-            divActive.style.display = 'none';
-            divQuitadas.style.display = 'none';
-            divTabela.style.display = 'none';
-            setTimeout(() => atualizarGrafico(), 100);
-            return;
-        }
-        graficosDiv.style.display = 'none';
-        
-        if(abaFiltroAtual === 'quitadas') {
-            divActive.style.display = 'none';
-            divQuitadas.style.display = 'block';
-            divTabela.style.display = 'none';
-        } else if(abaFiltroAtual === 'all') {
-            divActive.style.display = 'none';
-            divQuitadas.style.display = 'none';
-            divTabela.style.display = 'block';
-        } else {
-            divActive.style.display = 'block';
-            divQuitadas.style.display = 'none';
-            divTabela.style.display = 'block';
-        }
-    }
-
     async function atualizarTela() {
-        alternarVisao();
-        
         let ativos = getFilteredAtivos();
-        let todosAtivos = isAdmin ? dividas.filter(d => d.parcelaAtual <= d.totalParcelas) : dividas.filter(d => d.nome.toLowerCase().trim() === currentUser?.toLowerCase().trim() && d.cpf === currentCPF && d.parcelaAtual <= d.totalParcelas);
-        let totalDivida = todosAtivos.reduce((s, d) => s + (d.totalParcelas - d.parcelaAtual + 1) * d.valorParcela, 0);
-        let mesRef = document.getElementById('mesReferencia')?.value || currentMonth;
-        let pagoMes = getPaymentsInMonth(mesRef);
-        let aPagarMes = getDueInMonth(mesRef);
+        let stats = document.getElementById('statsGrid');
+        let totalDiv = ativos.reduce((s,d) => s + (d.totalParcelas - d.parcelaAtual + 1) * d.valorParcela, 0);
+        stats.innerHTML = `<div class="stat-card"><h3>💰 Total</h3><div>R$ ${totalDiv.toFixed(2)}</div></div>
+                           <div class="stat-card"><h3>📦 Ativas</h3><div>${ativos.length}</div></div>`;
         
-        const statsGrid = document.getElementById('statsGrid');
-        if(statsGrid) {
-            statsGrid.innerHTML = `
-                <div class="stat-card"><h3>💰 Dívida total</h3><div class="value">R$ ${totalDivida.toLocaleString('pt-BR', {minimumFractionDigits:2})}</div></div>
-                <div class="stat-card"><h3>📆 A pagar em ${mesRef}</h3><div class="value">R$ ${aPagarMes.toLocaleString('pt-BR', {minimumFractionDigits:2})}</div></div>
-                <div class="stat-card"><h3>✅ Pago em ${mesRef}</h3><div class="value">R$ ${pagoMes.toLocaleString('pt-BR', {minimumFractionDigits:2})}</div></div>
-                <div class="stat-card"><h3>📦 Ativas</h3><div class="value">${todosAtivos.length}</div></div>
-            `;
+        let container = document.getElementById('activeLoansList');
+        if (ativos.length === 0) container.innerHTML = '<p>✨ Nenhuma dívida ativa</p>';
+        else {
+            container.innerHTML = ativos.map(d => {
+                let faltam = d.totalParcelas - d.parcelaAtual + 1;
+                let pendente = faltam * d.valorParcela;
+                let venc = calcularVencimento(d.inicio, d.parcelaAtual, d.cartao) || '—';
+                let percent = ((d.parcelaAtual-1)/d.totalParcelas)*100;
+                return `<div class="divida-card">
+                    <div><strong>${d.nome}</strong> (${d.cartao}) <span style="float:right">${d.parcelaAtual}/${d.totalParcelas}</span></div>
+                    <div>💰 R$ ${d.valorParcela.toFixed(2)}</div>
+                    <div>📅 Início: ${formatarDataBR(d.inicio)} | Venc: ${venc}</div>
+                    <div class="progress-bar" style="height:4px; background:#eee; margin:8px 0;"><div style="width:${percent}%; height:4px; background:green; border-radius:2px;"></div></div>
+                    <div><strong>Faltam: ${faltam}x R$ ${d.valorParcela.toFixed(2)} = R$ ${pendente.toFixed(2)}</strong></div>
+                    <button class="btn-sm" onclick="abrirWhats(${d.id})" style="margin-top:8px; padding:4px 12px; background:#25D366; border:none; border-radius:20px;">📲 Cobrar</button>
+                </div>`;
+            }).join('');
         }
-        
-        let activeDiv = document.getElementById('activeLoansList');
-        if(activeDiv) {
-            if(ativos.length === 0) {
-                activeDiv.innerHTML = '<p>✨ Nenhuma dívida ativa.</p>';
-            } else {
-                activeDiv.innerHTML = ativos.map(d => {
-                    let faltam = d.totalParcelas - d.parcelaAtual + 1;
-                    let pendente = faltam * d.valorParcela;
-                    let vencimento = calcularVencimento(d.inicio, d.parcelaAtual, d.cartao) || '—';
-                    let percent = ((d.parcelaAtual-1)/d.totalParcelas)*100;
-                    return `
-                        <div class="divida-card">
-                            <div class="divida-header"><span>${d.nome} (${d.cartao})</span><span class="badge">${d.parcelaAtual}/${d.totalParcelas}</span></div>
-                            <div>💰 R$ ${d.valorParcela.toFixed(2)}</div>
-                            <div>📅 Início: ${formatarDataBR(d.inicio)} | Venc: ${vencimento}</div>
-                            <div class="progress-bar"><div class="progress-fill" style="width:${percent}%"></div></div>
-                            <div><strong>Faltam: ${faltam}x R$ ${d.valorParcela.toFixed(2)} = R$ ${pendente.toFixed(2)}</strong></div>
-                            <button class="btn-sm" onclick="abrirWhats(${d.id})">📲 Cobrar</button>
-                        </div>
-                    `;
-                }).join('');
-            }
-        }
-        
-        let tableBody = document.getElementById('tableBody');
-        if(tableBody) {
-            if(ativos.length === 0) {
-                tableBody.innerHTML = '<tr><td colspan="9">✨ Nenhuma dívida ativa.</d></tr>';
-            } else {
-                tableBody.innerHTML = ativos.map(d => {
-                    let faltam = d.totalParcelas - d.parcelaAtual + 1;
-                    let pendente = faltam * d.valorParcela;
-                    let vencimento = calcularVencimento(d.inicio, d.parcelaAtual, d.cartao) || '—';
-                    return `<tr>
-                        <td>${d.nome}</d>
-                        <td>${formatarCPF(d.cpf)}</d>
-                        <td>${d.cartao}</d>
-                        <td>${d.parcelaAtual}/${d.totalParcelas}</d>
-                        <td>R$ ${d.valorParcela.toFixed(2)}</d>
-                        <td>${faltam}</d>
-                        <td>R$ ${pendente.toFixed(2)}</d>
-                        <td>${vencimento}</d>
-                        <td><button class="btn-sm" onclick="abrirWhats(${d.id})">📲</button>
-                    </tr>`;
-                }).join('');
-            }
-        }
-        
-        let quitadas = getQuitadas();
-        let quitadasBody = document.getElementById('quitadasTableBody');
-        if(quitadasBody) {
-            if(quitadas.length === 0) {
-                quitadasBody.innerHTML = '<tr><td colspan="8">✨ Nenhuma quitada.</d></tr>';
-            } else {
-                quitadasBody.innerHTML = quitadas.map(d => {
-                    let totalPago = d.totalParcelas * d.valorParcela;
-                    let dataQuitacao = d.pagamentos?.length ? formatarDataBR(d.pagamentos[d.pagamentos.length-1].data) : formatarDataBR(d.inicio);
-                    return `<tr>
-                        <td>${d.nome}</d>
-                        <td>${formatarCPF(d.cpf)}</d>
-                        <td>${d.cartao}</d>
-                        <td>${d.totalParcelas}</d>
-                        <td>R$ ${d.valorParcela.toFixed(2)}</d>
-                        <td>R$ ${totalPago.toFixed(2)}</d>
-                        <td>${dataQuitacao}</d>
-                        <td>${d.whats || '-'}</d>
-                    </tr>`;
-                }).join('');
-            }
-        }
-        
-        if(isAdmin) {
-            let ativosSelect = dividas.filter(d => d.parcelaAtual <= d.totalParcelas);
-            let paySelect = document.getElementById('payLoanSelect');
-            if(paySelect) paySelect.innerHTML = ativosSelect.map(d => `<option value="${d.id}">${d.nome} - ${d.parcelaAtual}/${d.totalParcelas}</option>`).join('');
-            
-            let editSelect = document.getElementById('editLoanSelect');
-            if(editSelect) {
-                editSelect.innerHTML = dividas.map(d => `<option value="${d.id}">${d.nome} - ${d.parcelaAtual}/${d.totalParcelas}</option>`).join('');
-                let selected = dividas.find(d => d.id == editSelect.value);
-                if(selected) {
-                    document.getElementById('editInstallmentValue').value = selected.valorParcela;
-                    document.getElementById('editTotalParcels').value = selected.totalParcelas;
-                }
-            }
-        }
-    }
 
-    function setAbaFiltro(filtro) {
-        abaFiltroAtual = filtro;
-        document.querySelectorAll('.filter-tab').forEach(btn => {
-            if(btn.getAttribute('data-filtro') === filtro) btn.classList.add('active');
-            else btn.classList.remove('active');
-        });
-        atualizarTela();
-    }
+        let tabela = document.getElementById('tableBody');
+        if (ativos.length === 0) tabela.innerHTML = '<tr><td colspan="8">✨ Nenhuma dívida</td></tr>';
+        else {
+            tabela.innerHTML = ativos.map(d => {
+                let faltam = d.totalParcelas - d.parcelaAtual + 1;
+                let pendente = faltam * d.valorParcela;
+                let venc = calcularVencimento(d.inicio, d.parcelaAtual, d.cartao) || '—';
+                return `<tr>
+                    <td>${d.nome}</td><td>${formatarCPF(d.cpf)}</td><td>${d.cartao}</td>
+                    <td>${d.parcelaAtual}/${d.totalParcelas}</td><td>R$ ${d.valorParcela.toFixed(2)}</td>
+                    <td>${faltam}</td><td>R$ ${pendente.toFixed(2)}</td><td>${venc}</td>
+                    <td><button onclick="abrirWhats(${d.id})" style="background:#25D366; border:none; padding:4px 8px; border-radius:12px;">📲</button></td>
+                </tr>`;
+            }).join('');
+        }
 
-    function setAcao(acao) {
-        document.querySelectorAll('.action-btn').forEach(btn => {
-            if(btn.getAttribute('data-acao') === acao) btn.classList.add('active');
-            else btn.classList.remove('active');
-        });
-        document.querySelectorAll('.form-panel').forEach(p => p.classList.remove('active'));
-        let form = document.getElementById(`form-${acao}`);
-        if(form) form.classList.add('active');
+        if (isAdmin) {
+            let selectPay = document.getElementById('payLoanSelect');
+            if (selectPay) selectPay.innerHTML = dividas.filter(d => d.parcelaAtual <= d.totalParcelas).map(d => `<option value="${d.id}">${d.nome} - ${d.parcelaAtual}/${d.totalParcelas}</option>`).join('');
+            let selectEdit = document.getElementById('editLoanSelect');
+            if (selectEdit) selectEdit.innerHTML = dividas.map(d => `<option value="${d.id}">${d.nome} - ${d.parcelaAtual}/${d.totalParcelas}</option>`).join('');
+        }
     }
 
     window.abrirWhats = function(id) {
-        let d = dividas.find(d => d.id === id);
-        if(!d) return;
+        let d = dividas.find(x => x.id === id);
+        if (!d) return;
         let faltam = d.totalParcelas - d.parcelaAtual + 1;
-        let totalPendente = faltam * d.valorParcela;
+        let pendente = faltam * d.valorParcela;
         let venc = calcularVencimento(d.inicio, d.parcelaAtual, d.cartao) || 'em breve';
-        let msg = `Olá ${d.nome}! 📋\nSituação: ${d.parcelaAtual}/${d.totalParcelas}\nValor: R$ ${d.valorParcela.toFixed(2)}\nVencimento: ${venc}\nTotal pendente: R$ ${totalPendente.toFixed(2)}`;
+        let msg = `Olá ${d.nome}! 📋\nSituação: ${d.parcelaAtual}/${d.totalParcelas}\nValor: R$ ${d.valorParcela.toFixed(2)}\nVencimento: ${venc}\nTotal pendente: R$ ${pendente.toFixed(2)}`;
         document.getElementById('whatsNumero').value = d.whats || '';
         document.getElementById('whatsMensagem').value = msg;
-        document.getElementById('modalWhats').classList.remove('hidden');
+        document.getElementById('modalWhats').style.display = 'flex';
     };
-    
-    // EVENTOS
+
     document.getElementById('btnEnviarWhats')?.addEventListener('click', () => {
-        let numero = document.getElementById('whatsNumero').value.replace(/\D/g, '');
+        let num = document.getElementById('whatsNumero').value.replace(/\D/g, '');
         let msg = encodeURIComponent(document.getElementById('whatsMensagem').value);
-        if(numero) window.open(`https://wa.me/55${numero}?text=${msg}`, '_blank');
+        if (num) window.open(`https://wa.me/55${num}?text=${msg}`, '_blank');
         else alert("Número inválido");
-        document.getElementById('modalWhats').classList.add('hidden');
+        document.getElementById('modalWhats').style.display = 'none';
     });
-    
     document.getElementById('btnFecharWhats')?.addEventListener('click', () => {
-        document.getElementById('modalWhats').classList.add('hidden');
+        document.getElementById('modalWhats').style.display = 'none';
     });
 
-    document.getElementById('loginCPF')?.addEventListener('input', function(e) {
-        let cpf = this.value;
-        let msgDiv = document.getElementById('cpfValidationMsg');
-        if (cpf.length === 11) {
-            if (validarCPF(cpf)) {
-                msgDiv.textContent = '✓ CPF válido';
-                msgDiv.className = 'cpf-valid';
-            } else {
-                msgDiv.textContent = '✗ CPF inválido';
-                msgDiv.className = 'cpf-invalid';
-            }
-        } else if (cpf.length > 0) {
-            msgDiv.textContent = `Faltam ${11 - cpf.length} dígitos`;
-            msgDiv.className = 'cpf-invalid';
+    document.getElementById('btnLogin')?.addEventListener('click', async () => {
+        let nome = document.getElementById('loginNome').value.trim();
+        let cpf = document.getElementById('loginCPF').value.trim();
+        let senha = document.getElementById('loginSenha').value;
+        let error = document.getElementById('loginError');
+        if (!nome) { error.innerText = 'Digite seu nome'; error.classList.remove('hidden'); return; }
+        if (!cpf) { error.innerText = 'Digite seu CPF'; error.classList.remove('hidden'); return; }
+        if (!validarCPF(cpf)) { error.innerText = 'CPF inválido!'; error.classList.remove('hidden'); return; }
+        error.classList.add('hidden');
+        
+        showLoading("🔐 Carregando...");
+        await carregarDados();
+        
+        if (senha === SENHA_PADRAO || (localStorage.getItem('admin_pass') && senha === localStorage.getItem('admin_pass'))) {
+            isAdmin = true;
+            currentUser = nome;
+            currentCPF = cpf;
+            document.getElementById('currentUserName').innerHTML = `${nome} (Admin)`;
+            document.getElementById('adminBadge').classList.remove('hidden');
+            document.getElementById('adminActions').style.display = 'flex';
         } else {
-            msgDiv.classList.add('hidden');
-        }
-    });
-    
-    document.getElementById('resetCPF')?.addEventListener('input', function(e) {
-        let cpf = this.value;
-        let msgDiv = document.getElementById('resetCpfValidationMsg');
-        if (cpf.length === 11) {
-            if (validarCPF(cpf) && cpf === ADMIN_CPF) {
-                msgDiv.textContent = '✓ CPF do administrador';
-                msgDiv.className = 'cpf-valid';
-            } else {
-                msgDiv.textContent = '✗ CPF inválido ou não é admin';
-                msgDiv.className = 'cpf-invalid';
+            let existe = dividas.some(d => d.nome.toLowerCase().trim() === nome.toLowerCase().trim() && d.cpf === cpf);
+            if (!existe) {
+                hideLoading();
+                error.innerText = '❌ Nenhuma dívida para este nome e CPF!';
+                error.classList.remove('hidden');
+                return;
             }
-        } else if (cpf.length > 0) {
-            msgDiv.textContent = `Faltam ${11 - cpf.length} dígitos`;
-            msgDiv.className = 'cpf-invalid';
-        } else {
-            msgDiv.classList.add('hidden');
+            if (senha) {
+                hideLoading();
+                error.innerText = '⚠️ Cliente não precisa de senha!';
+                error.classList.remove('hidden');
+                return;
+            }
+            isAdmin = false;
+            currentUser = nome;
+            currentCPF = cpf;
+            document.getElementById('currentUserName').innerHTML = nome;
+            document.getElementById('adminBadge').classList.add('hidden');
+            document.getElementById('adminActions').style.display = 'none';
         }
+        
+        document.getElementById('loginScreen').style.display = 'none';
+        document.getElementById('mainContent').style.display = 'block';
+        await atualizarTela();
+        hideLoading();
     });
-    
+
     document.getElementById('btnResetPassword')?.addEventListener('click', () => {
-        document.getElementById('loginScreen').classList.add('hidden');
-        document.getElementById('resetPasswordScreen').classList.remove('hidden');
+        document.getElementById('loginScreen').style.display = 'none';
+        document.getElementById('resetPasswordScreen').style.display = 'block';
     });
-    
     document.getElementById('btnBackToLogin')?.addEventListener('click', () => {
-        document.getElementById('resetPasswordScreen').classList.add('hidden');
-        document.getElementById('loginScreen').classList.remove('hidden');
+        document.getElementById('resetPasswordScreen').style.display = 'none';
+        document.getElementById('loginScreen').style.display = 'block';
     });
-    
     document.getElementById('btnConfirmReset')?.addEventListener('click', () => {
         let cpf = document.getElementById('resetCPF').value.trim();
         let nova = document.getElementById('resetNewPassword').value;
-        let confirma = document.getElementById('resetConfirmPassword').value;
-        let errorDiv = document.getElementById('resetError');
-        
-        if (!cpf || cpf !== ADMIN_CPF) {
-            errorDiv.textContent = 'CPF do administrador inválido!';
-            errorDiv.classList.remove('hidden');
-            return;
-        }
-        if (!nova || nova.length < 4) {
-            errorDiv.textContent = 'Senha deve ter pelo menos 4 caracteres';
-            errorDiv.classList.remove('hidden');
-            return;
-        }
-        if (nova !== confirma) {
-            errorDiv.textContent = 'Senhas não coincidem!';
-            errorDiv.classList.remove('hidden');
-            return;
-        }
-        
-        setAdminSenha(nova);
+        let conf = document.getElementById('resetConfirmPassword').value;
+        if (cpf !== ADMIN_CPF) { alert("CPF inválido!"); return; }
+        if (!nova || nova.length < 4) { alert("Senha muito curta"); return; }
+        if (nova !== conf) { alert("Senhas não coincidem"); return; }
+        localStorage.setItem('admin_pass', nova);
         alert(`✅ Senha alterada para: ${nova}`);
-        document.getElementById('resetPasswordScreen').classList.add('hidden');
-        document.getElementById('loginScreen').classList.remove('hidden');
-        errorDiv.classList.add('hidden');
+        document.getElementById('resetPasswordScreen').style.display = 'none';
+        document.getElementById('loginScreen').style.display = 'block';
     });
-    
+
+    document.getElementById('logoutBtn')?.addEventListener('click', () => {
+        currentUser = null; currentCPF = null; isAdmin = false;
+        document.getElementById('loginScreen').style.display = 'block';
+        document.getElementById('mainContent').style.display = 'none';
+        document.getElementById('loginNome').value = '';
+        document.getElementById('loginCPF').value = '';
+        document.getElementById('loginSenha').value = '';
+    });
+
     document.getElementById('createLoanBtn')?.addEventListener('click', async () => {
-        if(!isAdmin) { alert("Apenas administrador"); return; }
-        
+        if (!isAdmin) return;
         let nome = document.getElementById('newName').value.trim();
         let cpf = document.getElementById('newCPF').value.trim();
         let whats = document.getElementById('newWhats').value.trim();
@@ -1205,252 +652,164 @@
         let pagas = parseInt(document.getElementById('newPaid').value) || 0;
         let cartao = document.getElementById('newCard').value;
         let inicio = document.getElementById('newDate').value;
-        
-        if(!nome) { alert("Nome obrigatório"); return; }
-        if(!cpf) { alert("CPF obrigatório"); return; }
-        if(!validarCPF(cpf)) { alert("CPF inválido! Use 12345678909"); return; }
-        if(isNaN(valor) || valor <= 0) { alert("Valor inválido"); return; }
-        if(isNaN(total) || total <= 0) { alert("Total inválido"); return; }
-        if(pagas >= total) { alert("Parcelas pagas não pode ser >= total"); return; }
-        
-        if(!inicio) inicio = calcularDataInicioAuto(pagas, cartao);
-        
-        const nova = { 
-            id: nextId++, nome, cpf, whats, valorParcela: valor, 
-            totalParcelas: total, parcelaAtual: pagas + 1, cartao, inicio, pagamentos: [] 
-        };
-        
-        dividas.push(nova);
+        if (!nome || !cpf) { alert("Nome e CPF obrigatórios"); return; }
+        if (!validarCPF(cpf)) { alert("CPF inválido!"); return; }
+        if (isNaN(valor) || valor <= 0) { alert("Valor inválido"); return; }
+        if (isNaN(total) || total <= 0) { alert("Total inválido"); return; }
+        if (!inicio) inicio = calcularDataInicioAuto(pagas, cartao);
+        let novoId = dividas.length > 0 ? Math.max(...dividas.map(d => d.id)) + 1 : 1;
+        dividas.push({ id: novoId, nome, cpf, whats, valorParcela: valor, totalParcelas: total, parcelaAtual: pagas + 1, cartao, inicio, pagamentos: [] });
         showLoading("💾 Salvando...");
-        if(await salvarDadosCloud()) {
-            await carregarDadosCloud();
-            await atualizarTela();
-            alert(`✅ Cadastrado: ${nome}`);
-            document.getElementById('newName').value = '';
-            document.getElementById('newCPF').value = '';
-            document.getElementById('newWhats').value = '';
-            document.getElementById('newInstallment').value = '';
-            document.getElementById('newTotal').value = '';
-            document.getElementById('newPaid').value = '0';
-            document.getElementById('newDate').value = '';
-        } else {
-            alert("❌ Erro ao salvar!");
-        }
+        if (await salvarDados()) { await carregarDados(); await atualizarTela(); alert("✅ Cadastrado!"); }
+        else alert("❌ Erro!");
         hideLoading();
+        document.getElementById('newName').value = '';
+        document.getElementById('newCPF').value = '';
+        document.getElementById('newWhats').value = '';
+        document.getElementById('newInstallment').value = '';
+        document.getElementById('newTotal').value = '';
+        document.getElementById('newPaid').value = '0';
+        document.getElementById('newDate').value = '';
     });
-    
+
     document.getElementById('payInstallmentBtn')?.addEventListener('click', async () => {
-        if(!isAdmin) return;
+        if (!isAdmin) return;
         let senha = document.getElementById('paySenha').value;
-        if(senha !== getAdminSenha()) { alert("Senha incorreta!"); return; }
+        let adminPass = localStorage.getItem('admin_pass') || SENHA_PADRAO;
+        if (senha !== adminPass) { alert("Senha incorreta!"); return; }
         let id = parseInt(document.getElementById('payLoanSelect').value);
         let data = document.getElementById('payDate').value;
         let divida = dividas.find(d => d.id === id);
-        if(!divida || divida.parcelaAtual > divida.totalParcelas) { alert("Dívida quitada"); return; }
-        if(!data) { alert("Data obrigatória"); return; }
-        
-        if(!divida.pagamentos) divida.pagamentos = [];
+        if (!divida || divida.parcelaAtual > divida.totalParcelas) { alert("Dívida quitada"); return; }
+        if (!data) { alert("Data obrigatória"); return; }
+        if (!divida.pagamentos) divida.pagamentos = [];
         divida.pagamentos.push({ data, parcela: divida.parcelaAtual });
         divida.parcelaAtual++;
-        
-        showLoading("💾 Registrando pagamento...");
-        if(await salvarDadosCloud()) {
-            await carregarDadosCloud();
-            await atualizarTela();
-            alert("✅ Pagamento registrado!");
-        } else {
-            alert("❌ Erro!");
-        }
+        showLoading("💾 Registrando...");
+        if (await salvarDados()) { await carregarDados(); await atualizarTela(); alert("✅ Pagamento registrado!"); }
+        else alert("❌ Erro!");
         hideLoading();
         document.getElementById('payDate').value = '';
         document.getElementById('paySenha').value = '';
     });
-    
+
     document.getElementById('saveEditBtn')?.addEventListener('click', async () => {
-        if(!isAdmin) return;
+        if (!isAdmin) return;
         let senha = document.getElementById('editSenha').value;
-        if(senha !== getAdminSenha()) { alert("Senha incorreta!"); return; }
+        let adminPass = localStorage.getItem('admin_pass') || SENHA_PADRAO;
+        if (senha !== adminPass) { alert("Senha incorreta!"); return; }
         let id = parseInt(document.getElementById('editLoanSelect').value);
         let divida = dividas.find(d => d.id === id);
-        if(!divida) return;
+        if (!divida) return;
         let novoValor = parseFloat(document.getElementById('editInstallmentValue').value);
         let novoTotal = parseInt(document.getElementById('editTotalParcels').value);
-        if(isNaN(novoValor) || isNaN(novoTotal)) { alert("Valores inválidos"); return; }
-        
+        if (isNaN(novoValor) || isNaN(novoTotal)) { alert("Valores inválidos"); return; }
         divida.valorParcela = novoValor;
-        if(novoTotal < divida.parcelaAtual) divida.parcelaAtual = novoTotal;
+        if (novoTotal < divida.parcelaAtual) divida.parcelaAtual = novoTotal;
         divida.totalParcelas = novoTotal;
-        
         showLoading("💾 Salvando...");
-        if(await salvarDadosCloud()) {
-            await carregarDadosCloud();
-            await atualizarTela();
-            alert("✅ Atualizado!");
-        } else {
-            alert("❌ Erro!");
-        }
+        if (await salvarDados()) { await carregarDados(); await atualizarTela(); alert("✅ Atualizado!"); }
+        else alert("❌ Erro!");
         hideLoading();
         document.getElementById('editSenha').value = '';
     });
-    
+
     document.getElementById('deleteLoanBtn')?.addEventListener('click', async () => {
-        if(!isAdmin) return;
+        if (!isAdmin) return;
         let senha = document.getElementById('editSenha').value;
-        if(senha !== getAdminSenha()) { alert("Senha incorreta!"); return; }
+        let adminPass = localStorage.getItem('admin_pass') || SENHA_PADRAO;
+        if (senha !== adminPass) { alert("Senha incorreta!"); return; }
         let id = parseInt(document.getElementById('editLoanSelect').value);
-        let divida = dividas.find(d => d.id === id);
-        if(confirm(`Excluir ${divida?.nome}?`)) {
-            dividas = dividas.filter(d => d.id !== id);
-            showLoading("🗑️ Excluindo...");
-            if(await salvarDadosCloud()) {
-                await carregarDadosCloud();
-                await atualizarTela();
-                alert("✅ Excluído!");
-            } else {
-                alert("❌ Erro!");
-            }
-            hideLoading();
-        }
+        if (!confirm("Excluir permanentemente?")) return;
+        dividas = dividas.filter(d => d.id !== id);
+        showLoading("🗑️ Excluindo...");
+        if (await salvarDados()) { await carregarDados(); await atualizarTela(); alert("✅ Excluído!"); }
+        else alert("❌ Erro!");
+        hideLoading();
+        document.getElementById('editSenha').value = '';
     });
-    
-    document.getElementById('btnLimparFiltros')?.addEventListener('click', () => {
-        document.getElementById('filtroNome').value = '';
-        document.getElementById('mesReferencia').value = '';
-        atualizarTela();
-    });
-    
+
     document.getElementById('exportExcelBtn')?.addEventListener('click', () => {
-        let dados = dividas.map(d => ({ 
-            Nome: d.nome, CPF: formatarCPF(d.cpf), WhatsApp: d.whats, 
-            Valor: d.valorParcela, Total: d.totalParcelas, Atual: d.parcelaAtual,
-            Status: d.parcelaAtual > d.totalParcelas ? 'Quitado' : 'Ativo', 
-            Cartão: d.cartao, Início: formatarDataBR(d.inicio)
-        }));
+        let dados = dividas.map(d => ({ Nome: d.nome, CPF: formatarCPF(d.cpf), WhatsApp: d.whats, Valor: d.valorParcela, Total: d.totalParcelas, Atual: d.parcelaAtual, Cartão: d.cartao, Início: formatarDataBR(d.inicio) }));
         let ws = XLSX.utils.json_to_sheet(dados);
         let wb = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(wb, ws, "Dividas");
         XLSX.writeFile(wb, `dividas_${new Date().toISOString().slice(0,10)}.xlsx`);
     });
-    
+
     document.getElementById('backupBtn')?.addEventListener('click', () => {
         let a = document.createElement('a');
-        a.href = URL.createObjectURL(new Blob([JSON.stringify({dividas, nextId})], {type:'application/json'}));
-        a.download = `backup_${new Date().toISOString().slice(0,19)}.json`;
+        a.href = URL.createObjectURL(new Blob([JSON.stringify(dividas)], {type:'application/json'}));
+        a.download = `backup_${Date.now()}.json`;
         a.click();
     });
-    
-    document.getElementById('restoreBtn')?.addEventListener('click', () => {
-        document.getElementById('restoreFile')?.click();
-    });
-    
+
+    document.getElementById('restoreBtn')?.addEventListener('click', () => document.getElementById('restoreFile').click());
     document.getElementById('restoreFile')?.addEventListener('change', async (e) => {
         let file = e.target.files[0];
-        if(!file) return;
+        if (!file) return;
         let reader = new FileReader();
         reader.onload = async (ev) => {
             try {
-                let data = JSON.parse(ev.target.result);
-                dividas = data.dividas || [];
-                nextId = data.nextId || 1;
+                dividas = JSON.parse(ev.target.result);
                 showLoading("🔄 Restaurando...");
-                if(await salvarDadosCloud()) {
-                    await carregarDadosCloud();
-                    await atualizarTela();
-                    alert("✅ Restaurado!");
-                }
+                if (await salvarDados()) { await carregarDados(); await atualizarTela(); alert("✅ Restaurado!"); }
                 hideLoading();
-            } catch(e) { alert("Erro no arquivo"); }
+            } catch(e) { alert("Arquivo inválido"); }
         };
         reader.readAsText(file);
     });
-    
-    document.getElementById('themeToggle')?.addEventListener('click', () => {
-        document.body.classList.toggle('dark');
-        document.getElementById('themeToggle').innerText = document.body.classList.contains('dark') ? '☀️ Claro' : '🌙 Escuro';
-        if(chartInstance) atualizarGrafico();
-    });
-    
-    document.getElementById('logoutBtn')?.addEventListener('click', () => {
-        currentUser = null;
-        currentCPF = null;
-        isAdmin = false;
-        document.getElementById('loginScreen').style.display = 'block';
-        document.getElementById('mainContent').style.display = 'none';
-        document.getElementById('loginNome').value = '';
-        document.getElementById('loginCPF').value = '';
-        document.getElementById('loginSenha').value = '';
-    });
-    
-    document.getElementById('btnLogin')?.addEventListener('click', async () => {
-        let nome = document.getElementById('loginNome').value.trim();
-        let cpf = document.getElementById('loginCPF').value.trim();
-        let senha = document.getElementById('loginSenha').value;
-        let errorDiv = document.getElementById('loginError');
-        
-        if(!nome) { errorDiv.innerText = 'Digite seu nome'; errorDiv.classList.remove('hidden'); return; }
-        if(!cpf) { errorDiv.innerText = 'Digite seu CPF'; errorDiv.classList.remove('hidden'); return; }
-        if(!validarCPF(cpf)) { errorDiv.innerText = 'CPF inválido!'; errorDiv.classList.remove('hidden'); return; }
-        
-        errorDiv.classList.add('hidden');
-        const btn = document.getElementById('btnLogin');
-        btn.innerText = '🔄...';
-        btn.disabled = true;
-        
-        showLoading("🔐 Entrando...");
-        await carregarDadosCloud();
-        
-        if(senha === getAdminSenha()) {
-            isAdmin = true;
-            currentUser = nome;
-            currentCPF = cpf;
-            document.getElementById('currentUserName').innerHTML = `${nome} (Admin)`;
-            document.getElementById('adminBadge').classList.remove('hidden');
-            document.getElementById('adminActions').style.display = 'flex';
-        } else {
-            const existe = dividas.some(d => d.nome.toLowerCase().trim() === nome.toLowerCase().trim() && d.cpf === cpf);
-            if(!existe) {
-                hideLoading();
-                errorDiv.innerText = '❌ Nenhuma dívida para este nome e CPF!';
-                errorDiv.classList.remove('hidden');
-                btn.innerText = '🔓 Entrar';
-                btn.disabled = false;
-                return;
-            }
-            if(senha) {
-                hideLoading();
-                errorDiv.innerText = '⚠️ Cliente não precisa de senha!';
-                errorDiv.classList.remove('hidden');
-                btn.innerText = '🔓 Entrar';
-                btn.disabled = false;
-                return;
-            }
-            isAdmin = false;
-            currentUser = nome;
-            currentCPF = cpf;
-            document.getElementById('currentUserName').innerHTML = `${nome}`;
-            document.getElementById('adminBadge').classList.add('hidden');
-            document.getElementById('adminActions').style.display = 'none';
-        }
-        
-        document.getElementById('loginScreen').style.display = 'none';
-        document.getElementById('mainContent').style.display = 'block';
-        await atualizarTela();
-        
-        hideLoading();
-        btn.innerText = '🔓 Entrar';
-        btn.disabled = false;
-    });
-    
+
     document.querySelectorAll('.action-btn').forEach(btn => {
-        btn.addEventListener('click', () => setAcao(btn.getAttribute('data-acao')));
+        btn.addEventListener('click', () => {
+            let acao = btn.getAttribute('data-acao');
+            document.querySelectorAll('.action-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            document.querySelectorAll('.form-panel').forEach(p => p.classList.remove('active'));
+            document.getElementById(`form-${acao}`).classList.add('active');
+        });
     });
+
     document.querySelectorAll('.filter-tab').forEach(btn => {
-        btn.addEventListener('click', () => setAbaFiltro(btn.getAttribute('data-filtro')));
+        btn.addEventListener('click', () => {
+            abaFiltroAtual = btn.getAttribute('data-filtro');
+            document.querySelectorAll('.filter-tab').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            let graficosDiv = document.getElementById('graficosContainer');
+            let divActive = document.getElementById('divActiveLoans');
+            let divQuitadas = document.getElementById('divQuitadasLista');
+            let divTabela = document.getElementById('divTabelaGeral');
+            if (abaFiltroAtual === 'graficos') {
+                graficosDiv.style.display = 'block';
+                divActive.style.display = 'none';
+                divQuitadas.style.display = 'none';
+                divTabela.style.display = 'none';
+            } else if (abaFiltroAtual === 'quitadas') {
+                graficosDiv.style.display = 'none';
+                divActive.style.display = 'none';
+                divQuitadas.style.display = 'block';
+                divTabela.style.display = 'none';
+            } else {
+                graficosDiv.style.display = 'none';
+                divActive.style.display = 'block';
+                divQuitadas.style.display = 'none';
+                divTabela.style.display = 'block';
+            }
+            atualizarTela();
+        });
     });
-    document.getElementById('filtroNome')?.addEventListener('input', () => atualizarTela());
-    document.getElementById('mesReferencia')?.addEventListener('change', () => atualizarTela());
-    
-    // NÃO carrega dados antes do login - só carrega quando clicar em entrar
+
+    document.getElementById('loginCPF')?.addEventListener('input', function() {
+        let cpf = this.value;
+        let msg = document.getElementById('cpfValidationMsg');
+        if (cpf.length === 11) {
+            if (validarCPF(cpf)) { msg.textContent = '✓ CPF válido'; msg.className = 'cpf-valid'; }
+            else { msg.textContent = '✗ CPF inválido'; msg.className = 'cpf-invalid'; }
+        } else if (cpf.length > 0) { msg.textContent = `Faltam ${11-cpf.length} dígitos`; msg.className = 'cpf-invalid'; }
+        else msg.classList.add('hidden');
+    });
+
+    console.log("✅ Sistema pronto - aguardando login");
 </script>
 </body>
 </html>
