@@ -500,39 +500,6 @@
             margin-top: 10px;
         }
 
-        .loading-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.7);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        .loading-spinner {
-            width: 50px;
-            height: 50px;
-            border: 5px solid var(--border);
-            border-top-color: var(--primary);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        .loading-text {
-            color: white;
-            font-size: 1.2rem;
-        }
-
         @media (max-width: 700px) {
             body { padding: 12px; font-size: 16px; }
             .stat-card .value { font-size: 1.3rem; }
@@ -714,11 +681,6 @@
     </div>
 </div>
 
-<div id="loadingOverlay" class="loading-overlay hidden">
-    <div class="loading-spinner"></div>
-    <div class="loading-text">⏳ Salvando dados...</div>
-</div>
-
 <script>
     // ============================================
     // CONFIGURAÇÕES DO SISTEMA
@@ -748,17 +710,6 @@
     let currentMonth = new Date().toISOString().slice(0,7);
     let abaFiltroAtual = "A";
     let chartInstance = null;
-
-    function mostrarLoading(texto = "⏳ Salvando dados...") {
-        const overlay = document.getElementById('loadingOverlay');
-        const text = overlay.querySelector('.loading-text');
-        text.textContent = texto;
-        overlay.classList.remove('hidden');
-    }
-
-    function esconderLoading() {
-        document.getElementById('loadingOverlay').classList.add('hidden');
-    }
 
     function validarCPF(cpf) {
         cpf = cpf.replace(/[^\d]/g, '');
@@ -829,7 +780,6 @@
 
     async function carregarDadosCloud() {
         try {
-            mostrarLoading("📥 Carregando dados...");
             const response = await fetch(`${API_URL}?action=load`);
             const result = await response.json();
             
@@ -848,36 +798,29 @@
                 }));
                 nextId = dividas.length > 0 ? Math.max(...dividas.map(d => d.id)) + 1 : 1;
                 console.log("✅ Dados carregados:", dividas.length);
-                esconderLoading();
                 return true;
             }
-            esconderLoading();
             return false;
         } catch(e) {
             console.error("Erro ao carregar:", e);
-            esconderLoading();
             return false;
         }
     }
 
     async function salvarDadosCloud() {
         try {
-            mostrarLoading("💾 Salvando dados...");
             const response = await fetch(`${API_URL}?action=save&dados=${encodeURIComponent(JSON.stringify(dividas))}`);
             const result = await response.json();
             
             if(result.success) {
                 console.log("✅ Dados salvos com sucesso");
-                esconderLoading();
                 return true;
             } else {
                 console.error("Erro ao salvar:", result.error);
-                esconderLoading();
                 return false;
             }
         } catch(e) {
             console.error("Erro de conexão:", e);
-            esconderLoading();
             return false;
         }
     }
@@ -1070,7 +1013,7 @@
         let tableBody = document.getElementById('tableBody');
         if(tableBody) {
             if(ativos.length === 0) {
-                tableBody.innerHTML = '<tr><td colspan="9" style="text-align:center;">✨ Nenhuma dívida ativa cadastrada.</td></tr>';
+                tableBody.innerHTML = '<tr><td colspan="9" style="text-align:center;">✨ Nenhuma dívida ativa cadastrada.离子</td>';
             } else {
                 tableBody.innerHTML = ativos.map(d => {
                     let faltam = d.totalParcelas - d.parcelaAtual + 1;
@@ -1095,7 +1038,7 @@
         let quitadasBody = document.getElementById('quitadasTableBody');
         if(quitadasBody) {
             if(quitadas.length === 0) {
-                quitadasBody.innerHTML = '<tr><td colspan="8" style="text-align:center;">✨ Nenhuma dívida quitada.</td></tr>';
+                quitadasBody.innerHTML = '<tr><td colspan="8" style="text-align:center;">✨ Nenhuma dívida quitada.}</d></tr>';
             } else {
                 quitadasBody.innerHTML = quitadas.map(d => {
                     let totalPago = d.totalParcelas * d.valorParcela;
@@ -1310,7 +1253,7 @@
         
         if(!nome) { alert("❌ Preencha o Nome"); return; }
         if(!cpf) { alert("❌ Preencha o CPF"); return; }
-        if(!validarCPF(cpf)) { alert("❌ CPF inválido!"); return; }
+        if(!validarCPF(cpf)) { alert("❌ CPF inválido! Use 52998224725 para teste"); return; }
         if(isNaN(valor) || valor <= 0) { alert("❌ Valor inválido"); return; }
         if(isNaN(total) || total <= 0) { alert("❌ Total de parcelas inválido"); return; }
         if(pagas >= total) { alert("❌ Parcelas pagas não pode ser >= total"); return; }
@@ -1337,12 +1280,9 @@
         const salvou = await salvarDadosCloud();
         
         if(salvou) {
-            // Recarregar os dados para garantir que está tudo sincronizado
             await carregarDadosCloud();
-            // Atualizar a tela imediatamente
             await atualizarTela();
             
-            // Limpar o formulário
             document.getElementById('newName').value = '';
             document.getElementById('newCPF').value = '';
             document.getElementById('newWhats').value = '';
@@ -1351,7 +1291,7 @@
             document.getElementById('newPaid').value = '0';
             document.getElementById('newDate').value = '';
             
-            alert(`✅ Dívida cadastrada com sucesso!\n📅 Data início: ${formatarDataBR(inicio)}\n💰 Valor: R$ ${valor.toFixed(2)}\n📦 Total: ${total} parcelas`);
+            alert(`✅ Dívida cadastrada com sucesso!\n\n📌 Cliente: ${nome}\n📅 Data início: ${formatarDataBR(inicio)}\n💰 Valor parcela: R$ ${valor.toFixed(2)}\n📦 Total: ${total} parcelas`);
         } else {
             alert("❌ Erro ao salvar! Verifique sua conexão com a internet.");
         }
@@ -1526,7 +1466,7 @@
         }
         
         if(!validarCPF(cpf)) {
-            errorDiv.innerText = 'CPF inválido!';
+            errorDiv.innerText = 'CPF inválido! Use 33264502810 para admin';
             errorDiv.classList.remove('hidden');
             return;
         }
