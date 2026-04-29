@@ -742,7 +742,17 @@
 
     function formatarDataBR(dataISO) {
         if(!dataISO) return '';
-        let partes = dataISO.split('-');
+        
+        // Se já estiver no formato DD/MM/AAAA, retorna ela mesma
+        if(dataISO.includes('/')) return dataISO;
+        
+        // Remove a parte do horário se existir (T03:00:00.000Z)
+        let dataLimpa = dataISO.split('T')[0];
+        
+        // Separa ano, mês, dia
+        let partes = dataLimpa.split('-');
+        if(partes.length !== 3) return dataISO;
+        
         return `${partes[2]}/${partes[1]}/${partes[0]}`;
     }
 
@@ -762,12 +772,16 @@
         if(pagas > 0) {
             dataCalculada.setMonth(dataCalculada.getMonth() - pagas);
         }
-        return dataCalculada.toISOString().slice(0,10);
+        // Retorna apenas YYYY-MM-DD sem o horário
+        return dataCalculada.toISOString().split('T')[0];
     }
 
     function calcularVencimento(inicio, parcelaAtual, cartao) {
         if(!inicio) return null;
-        let [ano, mes, dia] = inicio.split('-').map(Number);
+        
+        // Limpa a data se tiver horário
+        let dataInicio = inicio.split('T')[0];
+        let [ano, mes, dia] = dataInicio.split('-').map(Number);
         let diaVenc = CARD_DUE[cartao];
         let mesVenc = mes + (parcelaAtual - 1);
         let anoVenc = ano;
@@ -792,7 +806,7 @@
                     totalParcelas: parseInt(row[5]),
                     parcelaAtual: parseInt(row[6]),
                     cartao: row[7],
-                    inicio: row[8],
+                    inicio: row[8] ? row[8].split('T')[0] : '', // Limpa a data
                     pagamentos: row[9] ? JSON.parse(row[9]) : []
                 }));
                 nextId = dividas.length > 0 ? Math.max(...dividas.map(d => d.id)) + 1 : 1;
@@ -1046,7 +1060,7 @@
                     return `<tr>
                         <td><strong>${d.nome}</strong></d>
                         <td>${formatarCPF(d.cpf)}</d>
-                        <tr>${d.cartao}</d>
+                        <td>${d.cartao}</d>
                         <td>${d.totalParcelas}</d>
                         <td>R$ ${d.valorParcela.toFixed(2)}</d>
                         <td>R$ ${totalPago.toFixed(2)}</d>
@@ -1252,7 +1266,7 @@
         
         if(!nome) { alert("❌ Preencha o Nome"); return; }
         if(!cpf) { alert("❌ Preencha o CPF"); return; }
-        if(!validarCPF(cpf)) { alert("❌ CPF inválido! Use 52998224725 para teste"); return; }
+        if(!validarCPF(cpf)) { alert("❌ CPF inválido! Use 12345678909 para teste"); return; }
         if(isNaN(valor) || valor <= 0) { alert("❌ Valor inválido"); return; }
         if(isNaN(total) || total <= 0) { alert("❌ Total de parcelas inválido"); return; }
         if(pagas >= total) { alert("❌ Parcelas pagas não pode ser >= total"); return; }
@@ -1465,7 +1479,7 @@
         }
         
         if(!validarCPF(cpf)) {
-            errorDiv.innerText = 'CPF inválido! Use 33264502810 para admin';
+            errorDiv.innerText = 'CPF inválido!';
             errorDiv.classList.remove('hidden');
             return;
         }
