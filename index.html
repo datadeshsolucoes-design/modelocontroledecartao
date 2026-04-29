@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Controle do Cartão - Dashboard</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -335,6 +336,11 @@
             background: var(--primary-dark);
         }
 
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
         .btn-danger { background: var(--danger); }
         .btn-warning { background: var(--warning); }
         .btn-sm { padding: 6px 12px; font-size: 0.75rem; width: auto; }
@@ -494,6 +500,39 @@
             margin-top: 10px;
         }
 
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid var(--border);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            color: white;
+            font-size: 1.2rem;
+        }
+
         @media (max-width: 700px) {
             body { padding: 12px; font-size: 16px; }
             .stat-card .value { font-size: 1.3rem; }
@@ -513,9 +552,9 @@
         <input type="text" id="loginCPF" placeholder="CPF (apenas números)" maxlength="11" autocomplete="off">
         <div id="cpfValidationMsg" class="cpf-invalid hidden"></div>
     </div>
-    <input type="password" id="loginSenha" placeholder="Senha (apenas administrador)">
+    <input type="password" id="loginSenha" placeholder="Senha do administrador">
     <button id="btnLogin">🔓 Entrar</button>
-    <button id="btnResetPassword" class="reset-password-btn">🔄 Esqueci minha senha</button>
+    <button id="btnResetPassword" class="reset-password-btn">🔄 Esqueci minha senha (Admin)</button>
     <div id="loginError" class="login-error hidden"></div>
 </div>
 
@@ -570,7 +609,7 @@
         <div id="form-newLoan" class="form-panel">
             <h3>➕ Cadastrar nova dívida</h3>
             <div class="form-row">
-                <div class="form-group"><label>Nome completo *</label><input type="text" id="newName" placeholder="Ex: Ana"></div>
+                <div class="form-group"><label>Nome completo *</label><input type="text" id="newName" placeholder="Ex: Ana Silva"></div>
                 <div class="form-group"><label>CPF *</label><input type="text" id="newCPF" placeholder="Apenas números" maxlength="11"></div>
                 <div class="form-group"><label>WhatsApp <span class="label-opcional">(opcional)</span></label><input type="text" id="newWhats" placeholder="11999999999"></div>
                 <div class="form-group"><label>Valor da parcela (R$) *</label><input type="number" id="newInstallment" placeholder="275"></div>
@@ -638,7 +677,7 @@
 
         <div id="conteudoListas">
             <div id="divActiveLoans">
-                <h2>📋 Minhas dívidas ativas</h2>
+                <h2>📋 Dívidas ativas</h2>
                 <div id="activeLoansList"></div>
             </div>
 
@@ -675,28 +714,26 @@
     </div>
 </div>
 
-<script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
+<div id="loadingOverlay" class="loading-overlay hidden">
+    <div class="loading-spinner"></div>
+    <div class="loading-text">⏳ Salvando dados...</div>
+</div>
+
 <script>
     // ============================================
     // CONFIGURAÇÕES DO SISTEMA
     // ============================================
     const API_URL = 'https://script.google.com/macros/s/AKfycbxMPSCOhiyj0-3cDYROQwhfeYGq7mYOh-aFYHPiGe1HiMMhKG6HjFzicqHGzWEQJbgBZg/exec';
-    const ADMIN_CPF = "33264502810"; // CPF do administrador para redefinir senha
-    const SENHA_PADRAO = "270601";   // Senha padrão inicial
-    
-    // Chave para armazenar a senha no localStorage
+    const ADMIN_CPF = "33264502810";
+    const SENHA_PADRAO = "270601";
     const STORAGE_KEY = "admin_password";
     
-    // Função para obter a senha atual do administrador
     function getAdminSenha() {
         const savedPassword = localStorage.getItem(STORAGE_KEY);
-        if (savedPassword) {
-            return savedPassword;
-        }
+        if (savedPassword) return savedPassword;
         return SENHA_PADRAO;
     }
     
-    // Função para salvar nova senha
     function setAdminSenha(novaSenha) {
         localStorage.setItem(STORAGE_KEY, novaSenha);
     }
@@ -712,15 +749,22 @@
     let abaFiltroAtual = "A";
     let chartInstance = null;
 
-    // Função para validar CPF
+    function mostrarLoading(texto = "⏳ Salvando dados...") {
+        const overlay = document.getElementById('loadingOverlay');
+        const text = overlay.querySelector('.loading-text');
+        text.textContent = texto;
+        overlay.classList.remove('hidden');
+    }
+
+    function esconderLoading() {
+        document.getElementById('loadingOverlay').classList.add('hidden');
+    }
+
     function validarCPF(cpf) {
         cpf = cpf.replace(/[^\d]/g, '');
         if (cpf.length !== 11) return false;
-        
-        // Elimina CPFs conhecidos inválidos
         if (/^(\d)\1{10}$/.test(cpf)) return false;
         
-        // Valida 1º dígito
         let soma = 0;
         for (let i = 0; i < 9; i++) {
             soma += parseInt(cpf.charAt(i)) * (10 - i);
@@ -729,7 +773,6 @@
         let digito1 = (resto === 10 || resto === 11) ? 0 : resto;
         if (digito1 !== parseInt(cpf.charAt(9))) return false;
         
-        // Valida 2º dígito
         soma = 0;
         for (let i = 0; i < 10; i++) {
             soma += parseInt(cpf.charAt(i)) * (11 - i);
@@ -761,17 +804,14 @@
         let diaAtual = dataAtual.getDate();
         
         let dataCalculada;
-        
         if (diaAtual > diaVencimento) {
             dataCalculada = new Date(ano, mes + 1, diaVencimento);
         } else {
             dataCalculada = new Date(ano, mes, diaVencimento);
         }
-        
         if(pagas > 0) {
             dataCalculada.setMonth(dataCalculada.getMonth() - pagas);
         }
-        
         return dataCalculada.toISOString().slice(0,10);
     }
 
@@ -789,6 +829,7 @@
 
     async function carregarDadosCloud() {
         try {
+            mostrarLoading("📥 Carregando dados...");
             const response = await fetch(`${API_URL}?action=load`);
             const result = await response.json();
             
@@ -807,29 +848,36 @@
                 }));
                 nextId = dividas.length > 0 ? Math.max(...dividas.map(d => d.id)) + 1 : 1;
                 console.log("✅ Dados carregados:", dividas.length);
+                esconderLoading();
                 return true;
             }
+            esconderLoading();
             return false;
         } catch(e) {
             console.error("Erro ao carregar:", e);
+            esconderLoading();
             return false;
         }
     }
 
     async function salvarDadosCloud() {
         try {
+            mostrarLoading("💾 Salvando dados...");
             const response = await fetch(`${API_URL}?action=save&dados=${encodeURIComponent(JSON.stringify(dividas))}`);
             const result = await response.json();
             
             if(result.success) {
                 console.log("✅ Dados salvos com sucesso");
+                esconderLoading();
                 return true;
             } else {
                 console.error("Erro ao salvar:", result.error);
+                esconderLoading();
                 return false;
             }
         } catch(e) {
             console.error("Erro de conexão:", e);
+            esconderLoading();
             return false;
         }
     }
@@ -997,7 +1045,7 @@
         let activeDiv = document.getElementById('activeLoansList');
         if(activeDiv) {
             if(ativos.length === 0) {
-                activeDiv.innerHTML = '<p>Nenhuma dívida ativa.</p>';
+                activeDiv.innerHTML = '<p>✨ Nenhuma dívida ativa cadastrada.</p>';
             } else {
                 activeDiv.innerHTML = ativos.map(d => {
                     let faltam = d.totalParcelas - d.parcelaAtual + 1;
@@ -1022,7 +1070,7 @@
         let tableBody = document.getElementById('tableBody');
         if(tableBody) {
             if(ativos.length === 0) {
-                tableBody.innerHTML = '<tr><td colspan="9">Nenhuma dívida ativa.离子</tr>';
+                tableBody.innerHTML = '<tr><td colspan="9" style="text-align:center;">✨ Nenhuma dívida ativa cadastrada.</td></tr>';
             } else {
                 tableBody.innerHTML = ativos.map(d => {
                     let faltam = d.totalParcelas - d.parcelaAtual + 1;
@@ -1047,7 +1095,7 @@
         let quitadasBody = document.getElementById('quitadasTableBody');
         if(quitadasBody) {
             if(quitadas.length === 0) {
-                quitadasBody.innerHTML = '<tr><td colspan="8">Nenhuma dívida quitada.}</d></tr>';
+                quitadasBody.innerHTML = '<tr><td colspan="8" style="text-align:center;">✨ Nenhuma dívida quitada.</td></tr>';
             } else {
                 quitadasBody.innerHTML = quitadas.map(d => {
                     let totalPago = d.totalParcelas * d.valorParcela;
@@ -1117,6 +1165,10 @@
         document.getElementById('modalWhats').classList.remove('hidden');
     };
     
+    // ============================================
+    // EVENTOS DO SISTEMA
+    // ============================================
+    
     document.getElementById('btnEnviarWhats')?.addEventListener('click', () => {
         let numero = document.getElementById('whatsNumero').value.replace(/\D/g, '');
         let mensagem = encodeURIComponent(document.getElementById('whatsMensagem').value);
@@ -1129,7 +1181,6 @@
         document.getElementById('modalWhats').classList.add('hidden');
     });
 
-    // Validação de CPF em tempo real no login
     document.getElementById('loginCPF')?.addEventListener('input', function(e) {
         let cpf = this.value;
         let msgDiv = document.getElementById('cpfValidationMsg');
@@ -1150,7 +1201,6 @@
         }
     });
     
-    // Validação de CPF na tela de redefinição
     document.getElementById('resetCPF')?.addEventListener('input', function(e) {
         let cpf = this.value;
         let msgDiv = document.getElementById('resetCpfValidationMsg');
@@ -1161,7 +1211,7 @@
                     msgDiv.textContent = '✓ CPF do administrador validado';
                     msgDiv.className = 'cpf-valid';
                 } else {
-                    msgDiv.textContent = '✗ Este CPF não é o do administrador';
+                    msgDiv.textContent = '✗ Este CPF não é do administrador';
                     msgDiv.className = 'cpf-invalid';
                 }
             } else {
@@ -1176,7 +1226,6 @@
         }
     });
     
-    // Botão de redefinir senha
     document.getElementById('btnResetPassword')?.addEventListener('click', () => {
         document.getElementById('loginScreen').classList.add('hidden');
         document.getElementById('resetPasswordScreen').classList.remove('hidden');
@@ -1186,13 +1235,11 @@
         document.getElementById('resetError').classList.add('hidden');
     });
     
-    // Botão voltar ao login
     document.getElementById('btnBackToLogin')?.addEventListener('click', () => {
         document.getElementById('resetPasswordScreen').classList.add('hidden');
         document.getElementById('loginScreen').classList.remove('hidden');
     });
     
-    // Confirmar redefinição de senha
     document.getElementById('btnConfirmReset')?.addEventListener('click', () => {
         let cpf = document.getElementById('resetCPF').value.trim();
         let novaSenha = document.getElementById('resetNewPassword').value;
@@ -1235,12 +1282,9 @@
             return;
         }
         
-        // Salvar nova senha
         setAdminSenha(novaSenha);
-        
         alert(`✅ Senha redefinida com sucesso!\n\nNova senha: ${novaSenha}\n\nGuarde em um local seguro!`);
         
-        // Voltar para o login
         document.getElementById('resetPasswordScreen').classList.add('hidden');
         document.getElementById('loginScreen').classList.remove('hidden');
         document.getElementById('resetCPF').value = '';
@@ -1264,12 +1308,12 @@
         let cartao = document.getElementById('newCard').value;
         let inicioFornecida = document.getElementById('newDate').value;
         
-        if(!nome) { alert("Preencha o Nome"); return; }
-        if(!cpf) { alert("Preencha o CPF"); return; }
-        if(!validarCPF(cpf)) { alert("CPF inválido!"); return; }
-        if(isNaN(valor) || valor <= 0) { alert("Valor inválido"); return; }
-        if(isNaN(total) || total <= 0) { alert("Total de parcelas inválido"); return; }
-        if(pagas >= total) { alert("Parcelas pagas não pode ser >= total"); return; }
+        if(!nome) { alert("❌ Preencha o Nome"); return; }
+        if(!cpf) { alert("❌ Preencha o CPF"); return; }
+        if(!validarCPF(cpf)) { alert("❌ CPF inválido!"); return; }
+        if(isNaN(valor) || valor <= 0) { alert("❌ Valor inválido"); return; }
+        if(isNaN(total) || total <= 0) { alert("❌ Total de parcelas inválido"); return; }
+        if(pagas >= total) { alert("❌ Parcelas pagas não pode ser >= total"); return; }
         
         let inicio = inicioFornecida;
         if(!inicio) {
@@ -1293,9 +1337,12 @@
         const salvou = await salvarDadosCloud();
         
         if(salvou) {
+            // Recarregar os dados para garantir que está tudo sincronizado
             await carregarDadosCloud();
-            atualizarTela();
+            // Atualizar a tela imediatamente
+            await atualizarTela();
             
+            // Limpar o formulário
             document.getElementById('newName').value = '';
             document.getElementById('newCPF').value = '';
             document.getElementById('newWhats').value = '';
@@ -1304,21 +1351,21 @@
             document.getElementById('newPaid').value = '0';
             document.getElementById('newDate').value = '';
             
-            alert(`✅ Dívida cadastrada com sucesso!\n📅 Data início: ${formatarDataBR(inicio)}`);
+            alert(`✅ Dívida cadastrada com sucesso!\n📅 Data início: ${formatarDataBR(inicio)}\n💰 Valor: R$ ${valor.toFixed(2)}\n📦 Total: ${total} parcelas`);
         } else {
-            alert("❌ Erro ao salvar! Verifique sua conexão.");
+            alert("❌ Erro ao salvar! Verifique sua conexão com a internet.");
         }
     });
     
     document.getElementById('payInstallmentBtn')?.addEventListener('click', async () => {
         if(!isAdmin) return;
         let senha = document.getElementById('paySenha').value;
-        if(senha !== getAdminSenha()) { alert("Senha incorreta!"); return; }
+        if(senha !== getAdminSenha()) { alert("❌ Senha incorreta!"); return; }
         let id = parseInt(document.getElementById('payLoanSelect').value);
         let data = document.getElementById('payDate').value;
         let divida = dividas.find(d => d.id === id);
-        if(!divida || divida.parcelaAtual > divida.totalParcelas) { alert("Dívida já quitada"); return; }
-        if(!data) { alert("Informe a data"); return; }
+        if(!divida || divida.parcelaAtual > divida.totalParcelas) { alert("❌ Dívida já quitada"); return; }
+        if(!data) { alert("❌ Informe a data do pagamento"); return; }
         if(!divida.pagamentos) divida.pagamentos = [];
         divida.pagamentos.push({ data, parcela: divida.parcelaAtual });
         divida.parcelaAtual++;
@@ -1326,10 +1373,10 @@
         const salvou = await salvarDadosCloud();
         if(salvou) {
             await carregarDadosCloud();
-            atualizarTela();
-            alert("Pagamento registrado!");
+            await atualizarTela();
+            alert("✅ Pagamento registrado com sucesso!");
         } else {
-            alert("Erro ao registrar pagamento!");
+            alert("❌ Erro ao registrar pagamento!");
         }
         
         document.getElementById('payDate').value = '';
@@ -1339,13 +1386,13 @@
     document.getElementById('saveEditBtn')?.addEventListener('click', async () => {
         if(!isAdmin) return;
         let senha = document.getElementById('editSenha').value;
-        if(senha !== getAdminSenha()) { alert("Senha incorreta!"); return; }
+        if(senha !== getAdminSenha()) { alert("❌ Senha incorreta!"); return; }
         let id = parseInt(document.getElementById('editLoanSelect').value);
         let divida = dividas.find(d => d.id === id);
         if(!divida) return;
         let novoValor = parseFloat(document.getElementById('editInstallmentValue').value);
         let novoTotal = parseInt(document.getElementById('editTotalParcels').value);
-        if(isNaN(novoValor) || isNaN(novoTotal)) { alert("Valores inválidos"); return; }
+        if(isNaN(novoValor) || isNaN(novoTotal)) { alert("❌ Valores inválidos"); return; }
         divida.valorParcela = novoValor;
         if(novoTotal < divida.parcelaAtual) divida.parcelaAtual = novoTotal;
         divida.totalParcelas = novoTotal;
@@ -1354,10 +1401,10 @@
         const salvou = await salvarDadosCloud();
         if(salvou) {
             await carregarDadosCloud();
-            atualizarTela();
-            alert("Atualizado!");
+            await atualizarTela();
+            alert("✅ Dívida atualizada com sucesso!");
         } else {
-            alert("Erro ao atualizar!");
+            alert("❌ Erro ao atualizar!");
         }
         document.getElementById('editSenha').value = '';
     });
@@ -1365,17 +1412,18 @@
     document.getElementById('deleteLoanBtn')?.addEventListener('click', async () => {
         if(!isAdmin) return;
         let senha = document.getElementById('editSenha').value;
-        if(senha !== getAdminSenha()) { alert("Senha incorreta!"); return; }
+        if(senha !== getAdminSenha()) { alert("❌ Senha incorreta!"); return; }
         let id = parseInt(document.getElementById('editLoanSelect').value);
-        if(confirm("Excluir permanentemente?")) {
+        let divida = dividas.find(d => d.id === id);
+        if(confirm(`⚠️ Tem certeza que deseja excluir a dívida de ${divida?.nome}?\n\nEsta ação não pode ser desfeita!`)) {
             dividas = dividas.filter(d => d.id !== id);
             const salvou = await salvarDadosCloud();
             if(salvou) {
                 await carregarDadosCloud();
-                atualizarTela();
-                alert("Excluído!");
+                await atualizarTela();
+                alert("✅ Dívida excluída com sucesso!");
             } else {
-                alert("Erro ao excluir!");
+                alert("❌ Erro ao excluir!");
             }
             document.getElementById('editSenha').value = '';
         }
@@ -1410,7 +1458,7 @@
     document.getElementById('backupBtn')?.addEventListener('click', () => {
         let a = document.createElement('a');
         a.href = URL.createObjectURL(new Blob([JSON.stringify({dividas, nextId})], {type:'application/json'}));
-        a.download = `backup_cartao.json`;
+        a.download = `backup_cartao_${new Date().toISOString().slice(0,19)}.json`;
         a.click();
     });
     
@@ -1430,10 +1478,12 @@
                 const salvou = await salvarDadosCloud();
                 if(salvou) {
                     await carregarDadosCloud();
-                    atualizarTela();
-                    alert("Backup restaurado!");
+                    await atualizarTela();
+                    alert("✅ Backup restaurado com sucesso!");
+                } else {
+                    alert("❌ Erro ao restaurar backup!");
                 }
-            } catch(e) { alert("Erro ao restaurar"); }
+            } catch(e) { alert("❌ Erro ao ler arquivo de backup"); }
         };
         reader.readAsText(file);
     });
@@ -1454,6 +1504,7 @@
         document.getElementById('loginNome').value = '';
         document.getElementById('loginCPF').value = '';
         document.getElementById('loginSenha').value = '';
+        document.getElementById('cpfValidationMsg').classList.add('hidden');
     });
     
     document.getElementById('btnLogin')?.addEventListener('click', async () => {
@@ -1481,37 +1532,37 @@
         }
         
         errorDiv.classList.add('hidden');
-        document.getElementById('btnLogin').innerText = 'Carregando...';
-        document.getElementById('btnLogin').disabled = true;
+        const btn = document.getElementById('btnLogin');
+        btn.innerText = '🔄 Carregando...';
+        btn.disabled = true;
         
         await carregarDadosCloud();
         
-        // Verifica se é administrador (senha correta)
+        // Verifica se é administrador
         if(senha === getAdminSenha()) {
             isAdmin = true;
             currentUser = nome;
             currentCPF = cpf;
-            document.getElementById('currentUserName').innerHTML = `${nome} (${formatarCPF(cpf)})`;
+            document.getElementById('currentUserName').innerHTML = `${nome} (Admin - ${formatarCPF(cpf)})`;
             document.getElementById('adminBadge').classList.remove('hidden');
             document.getElementById('adminActions').style.display = 'flex';
         } else {
-            // Verifica se existe uma dívida com esse nome e CPF
+            // Se não for admin, verifica se existe dívida
             const userExists = dividas.some(d => d.nome.toLowerCase() === nome.toLowerCase() && d.cpf === cpf);
             
             if(!userExists) {
-                errorDiv.innerText = 'Nenhuma dívida encontrada para este nome e CPF!';
+                errorDiv.innerText = '❌ Nenhuma dívida encontrada para este nome e CPF!';
                 errorDiv.classList.remove('hidden');
-                document.getElementById('btnLogin').innerText = '🔓 Entrar';
-                document.getElementById('btnLogin').disabled = false;
+                btn.innerText = '🔓 Entrar';
+                btn.disabled = false;
                 return;
             }
             
-            // Se for cliente mas digitou alguma senha, avisa que não precisa
             if(senha) {
-                errorDiv.innerText = '⚠️ Clientes não precisam de senha! Basta nome e CPF.';
+                errorDiv.innerText = '⚠️ Clientes não precisam de senha! Apenas nome e CPF.';
                 errorDiv.classList.remove('hidden');
-                document.getElementById('btnLogin').innerText = '🔓 Entrar';
-                document.getElementById('btnLogin').disabled = false;
+                btn.innerText = '🔓 Entrar';
+                btn.disabled = false;
                 return;
             }
             
@@ -1525,10 +1576,10 @@
         
         document.getElementById('loginScreen').style.display = 'none';
         document.getElementById('mainContent').style.display = 'block';
-        atualizarTela();
+        await atualizarTela();
         
-        document.getElementById('btnLogin').innerText = '🔓 Entrar';
-        document.getElementById('btnLogin').disabled = false;
+        btn.innerText = '🔓 Entrar';
+        btn.disabled = false;
     });
     
     document.getElementById('loginNome')?.addEventListener('keypress', (e) => {
