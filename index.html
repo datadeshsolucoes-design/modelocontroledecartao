@@ -499,6 +499,44 @@
             margin-top: 10px;
         }
 
+        /* LOADING OVERLAY */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .loading-spinner {
+            width: 60px;
+            height: 60px;
+            border: 5px solid var(--border);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            color: white;
+            font-size: 1.2rem;
+            font-weight: 500;
+            background: rgba(0,0,0,0.5);
+            padding: 10px 20px;
+            border-radius: 40px;
+        }
+
         @media (max-width: 700px) {
             body { padding: 12px; font-size: 16px; }
             .stat-card .value { font-size: 1.3rem; }
@@ -651,9 +689,9 @@
                 <h2>✅ Histórico de dívidas quitadas</h2>
                 <div class="table-container">
                     <table class="data-table">
-                        <thead><tr><th>Nome</th><th>CPF</th><th>Cartão</th><th>Total Parcelas</th><th>Valor</th><th>Total Pago</th><th>Data Quitação</th><th>WhatsApp</th></tr></thead>
+                        <thead><tr><th>Nome</th><th>CPF</th><th>Cartão</th><th>Total Parcelas</th><th>Valor</th><th>Total Pago</th><th>Data Quitação</th><th>WhatsApp</th></table></thead>
                         <tbody id="quitadasTableBody"></tbody>
-                    </table>
+                    }</table>
                 </div>
             </div>
 
@@ -663,7 +701,7 @@
                     <table class="data-table">
                         <thead><tr><th>Nome</th><th>CPF</th><th>Cartão</th><th>Parcela</th><th>Valor</th><th>Restantes</th><th>Total Pendente</th><th>Vencimento</th><th>WhatsApp</th></tr></thead>
                         <tbody id="tableBody"></tbody>
-                    </table>
+                    }</table>
                 </div>
             </div>
         </div>
@@ -680,6 +718,12 @@
     </div>
 </div>
 
+<!-- LOADING OVERLAY -->
+<div id="loadingOverlay" class="loading-overlay hidden">
+    <div class="loading-spinner"></div>
+    <div class="loading-text" id="loadingText">⏳ Processando...</div>
+</div>
+
 <script>
     // ============================================
     // CONFIGURAÇÕES DO SISTEMA
@@ -688,6 +732,19 @@
     const ADMIN_CPF = "12345678909";
     const SENHA_PADRAO = "123456";
     const STORAGE_KEY = "admin_password";
+    
+    // Funções de Loading
+    function showLoading(message = "⏳ Processando...") {
+        const overlay = document.getElementById('loadingOverlay');
+        const text = document.getElementById('loadingText');
+        text.textContent = message;
+        overlay.classList.remove('hidden');
+    }
+    
+    function hideLoading() {
+        const overlay = document.getElementById('loadingOverlay');
+        overlay.classList.add('hidden');
+    }
     
     function getAdminSenha() {
         const savedPassword = localStorage.getItem(STORAGE_KEY);
@@ -742,17 +799,10 @@
 
     function formatarDataBR(dataISO) {
         if(!dataISO) return '';
-        
-        // Se já estiver no formato DD/MM/AAAA, retorna ela mesma
         if(dataISO.includes('/')) return dataISO;
-        
-        // Remove a parte do horário se existir (T03:00:00.000Z)
         let dataLimpa = dataISO.split('T')[0];
-        
-        // Separa ano, mês, dia
         let partes = dataLimpa.split('-');
         if(partes.length !== 3) return dataISO;
-        
         return `${partes[2]}/${partes[1]}/${partes[0]}`;
     }
 
@@ -772,14 +822,11 @@
         if(pagas > 0) {
             dataCalculada.setMonth(dataCalculada.getMonth() - pagas);
         }
-        // Retorna apenas YYYY-MM-DD sem o horário
         return dataCalculada.toISOString().split('T')[0];
     }
 
     function calcularVencimento(inicio, parcelaAtual, cartao) {
         if(!inicio) return null;
-        
-        // Limpa a data se tiver horário
         let dataInicio = inicio.split('T')[0];
         let [ano, mes, dia] = dataInicio.split('-').map(Number);
         let diaVenc = CARD_DUE[cartao];
@@ -793,6 +840,7 @@
 
     async function carregarDadosCloud() {
         try {
+            showLoading("📥 Carregando dados da planilha...");
             const response = await fetch(`${API_URL}?action=load`);
             const result = await response.json();
             
@@ -806,34 +854,41 @@
                     totalParcelas: parseInt(row[5]),
                     parcelaAtual: parseInt(row[6]),
                     cartao: row[7],
-                    inicio: row[8] ? row[8].split('T')[0] : '', // Limpa a data
+                    inicio: row[8] ? row[8].split('T')[0] : '',
                     pagamentos: row[9] ? JSON.parse(row[9]) : []
                 }));
                 nextId = dividas.length > 0 ? Math.max(...dividas.map(d => d.id)) + 1 : 1;
                 console.log("✅ Dados carregados:", dividas.length);
+                hideLoading();
                 return true;
             }
+            hideLoading();
             return false;
         } catch(e) {
             console.error("Erro ao carregar:", e);
+            hideLoading();
             return false;
         }
     }
 
     async function salvarDadosCloud() {
         try {
+            showLoading("💾 Salvando dados na planilha...");
             const response = await fetch(`${API_URL}?action=save&dados=${encodeURIComponent(JSON.stringify(dividas))}`);
             const result = await response.json();
             
             if(result.success) {
                 console.log("✅ Dados salvos com sucesso");
+                hideLoading();
                 return true;
             } else {
                 console.error("Erro ao salvar:", result.error);
+                hideLoading();
                 return false;
             }
         } catch(e) {
             console.error("Erro de conexão:", e);
+            hideLoading();
             return false;
         }
     }
@@ -841,20 +896,24 @@
     function getFilteredAtivos() {
         let ativos = dividas.filter(d => d.parcelaAtual <= d.totalParcelas);
         if(!isAdmin && currentUser && currentCPF) {
-            ativos = ativos.filter(d => d.nome.toLowerCase() === currentUser.toLowerCase() && d.cpf === currentCPF);
+            ativos = ativos.filter(d => d.nome.toLowerCase().trim() === currentUser.toLowerCase().trim() && d.cpf === currentCPF);
         }
-        let nomeFiltro = document.getElementById('filtroNome')?.value.toLowerCase();
+        let nomeFiltro = document.getElementById('filtroNome')?.value.toLowerCase().trim();
         if(nomeFiltro) ativos = ativos.filter(d => d.nome.toLowerCase().includes(nomeFiltro));
-        if(abaFiltroAtual === 'A' || abaFiltroAtual === 'B') ativos = ativos.filter(d => d.cartao === abaFiltroAtual);
+        if(abaFiltroAtual !== 'all' && abaFiltroAtual !== 'quitadas' && abaFiltroAtual !== 'graficos') {
+            if(abaFiltroAtual === 'A' || abaFiltroAtual === 'B') {
+                ativos = ativos.filter(d => d.cartao === abaFiltroAtual);
+            }
+        }
         return ativos;
     }
 
     function getQuitadas() {
         let quitadas = dividas.filter(d => d.parcelaAtual > d.totalParcelas);
         if(!isAdmin && currentUser && currentCPF) {
-            quitadas = quitadas.filter(d => d.nome.toLowerCase() === currentUser.toLowerCase() && d.cpf === currentCPF);
+            quitadas = quitadas.filter(d => d.nome.toLowerCase().trim() === currentUser.toLowerCase().trim() && d.cpf === currentCPF);
         }
-        let nomeFiltro = document.getElementById('filtroNome')?.value.toLowerCase();
+        let nomeFiltro = document.getElementById('filtroNome')?.value.toLowerCase().trim();
         if(nomeFiltro) quitadas = quitadas.filter(d => d.nome.toLowerCase().includes(nomeFiltro));
         if(abaFiltroAtual === 'A' || abaFiltroAtual === 'B') quitadas = quitadas.filter(d => d.cartao === abaFiltroAtual);
         return quitadas;
@@ -862,7 +921,7 @@
 
     function getPaymentsInMonth(month) {
         let total = 0;
-        let dividasFiltradas = isAdmin ? dividas : dividas.filter(d => d.nome.toLowerCase() === currentUser?.toLowerCase() && d.cpf === currentCPF);
+        let dividasFiltradas = isAdmin ? dividas : dividas.filter(d => d.nome.toLowerCase().trim() === currentUser?.toLowerCase().trim() && d.cpf === currentCPF);
         dividasFiltradas.forEach(d => {
             d.pagamentos?.forEach(p => { if(p.data.startsWith(month)) total += d.valorParcela; });
         });
@@ -871,7 +930,7 @@
 
     function getDueInMonth(month) {
         let total = 0;
-        let dividasFiltradas = isAdmin ? dividas : dividas.filter(d => d.nome.toLowerCase() === currentUser?.toLowerCase() && d.cpf === currentCPF);
+        let dividasFiltradas = isAdmin ? dividas : dividas.filter(d => d.nome.toLowerCase().trim() === currentUser?.toLowerCase().trim() && d.cpf === currentCPF);
         dividasFiltradas.forEach(d => {
             if(d.parcelaAtual > d.totalParcelas) return;
             for(let i = d.parcelaAtual; i <= d.totalParcelas; i++) {
@@ -891,7 +950,7 @@
         let meses = [];
         let pagos = [];
         let aPagar = [];
-        let dividasFiltradas = isAdmin ? dividas : dividas.filter(d => d.nome.toLowerCase() === currentUser?.toLowerCase() && d.cpf === currentCPF);
+        let dividasFiltradas = isAdmin ? dividas : dividas.filter(d => d.nome.toLowerCase().trim() === currentUser?.toLowerCase().trim() && d.cpf === currentCPF);
         
         for(let i = 5; i >= 0; i--) {
             let data = new Date(hoje.getFullYear(), hoje.getMonth() - i, 1);
@@ -982,7 +1041,7 @@
         alternarVisao();
         
         let ativos = getFilteredAtivos();
-        let todosAtivos = isAdmin ? dividas.filter(d => d.parcelaAtual <= d.totalParcelas) : dividas.filter(d => d.nome.toLowerCase() === currentUser?.toLowerCase() && d.cpf === currentCPF && d.parcelaAtual <= d.totalParcelas);
+        let todosAtivos = isAdmin ? dividas.filter(d => d.parcelaAtual <= d.totalParcelas) : dividas.filter(d => d.nome.toLowerCase().trim() === currentUser?.toLowerCase().trim() && d.cpf === currentCPF && d.parcelaAtual <= d.totalParcelas);
         let totalDivida = todosAtivos.reduce((s, d) => s + (d.totalParcelas - d.parcelaAtual + 1) * d.valorParcela, 0);
         let mesRef = document.getElementById('mesReferencia')?.value || currentMonth;
         let pagoMes = getPaymentsInMonth(mesRef);
@@ -1196,7 +1255,7 @@
         document.getElementById('loginScreen').classList.remove('hidden');
     });
     
-    document.getElementById('btnConfirmReset')?.addEventListener('click', () => {
+    document.getElementById('btnConfirmReset')?.addEventListener('click', async () => {
         let cpf = document.getElementById('resetCPF').value.trim();
         let novaSenha = document.getElementById('resetNewPassword').value;
         let confirmSenha = document.getElementById('resetConfirmPassword').value;
@@ -1266,7 +1325,7 @@
         
         if(!nome) { alert("❌ Preencha o Nome"); return; }
         if(!cpf) { alert("❌ Preencha o CPF"); return; }
-        if(!validarCPF(cpf)) { alert("❌ CPF inválido! Use 12345678909 para teste"); return; }
+        if(!validarCPF(cpf)) { alert("❌ CPF inválido! Use 12345678909 ou 52998224725"); return; }
         if(isNaN(valor) || valor <= 0) { alert("❌ Valor inválido"); return; }
         if(isNaN(total) || total <= 0) { alert("❌ Total de parcelas inválido"); return; }
         if(pagas >= total) { alert("❌ Parcelas pagas não pode ser >= total"); return; }
@@ -1489,6 +1548,7 @@
         btn.innerText = '🔄 Carregando...';
         btn.disabled = true;
         
+        showLoading("🔐 Verificando credenciais...");
         await carregarDadosCloud();
         
         // Verifica se é administrador
@@ -1501,9 +1561,10 @@
             document.getElementById('adminActions').style.display = 'flex';
         } else {
             // Se não for admin, verifica se existe dívida
-            const userExists = dividas.some(d => d.nome.toLowerCase() === nome.toLowerCase() && d.cpf === cpf);
+            const userExists = dividas.some(d => d.nome.toLowerCase().trim() === nome.toLowerCase().trim() && d.cpf === cpf);
             
             if(!userExists) {
+                hideLoading();
                 errorDiv.innerText = '❌ Nenhuma dívida encontrada para este nome e CPF!';
                 errorDiv.classList.remove('hidden');
                 btn.innerText = '🔓 Entrar';
@@ -1512,6 +1573,7 @@
             }
             
             if(senha) {
+                hideLoading();
                 errorDiv.innerText = '⚠️ Clientes não precisam de senha! Apenas nome e CPF.';
                 errorDiv.classList.remove('hidden');
                 btn.innerText = '🔓 Entrar';
@@ -1531,6 +1593,7 @@
         document.getElementById('mainContent').style.display = 'block';
         await atualizarTela();
         
+        hideLoading();
         btn.innerText = '🔓 Entrar';
         btn.disabled = false;
     });
